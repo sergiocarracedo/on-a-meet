@@ -39,20 +39,21 @@
 
 ---
 
-## Phase 3: Command Execution & Templates
+## Phase 3: Command Execution & Templates ✅
 
 **Goal:** Execute user commands on state transitions with template variables.
 
 **Requirements:** REQ-002, REQ-003
 
 **Tasks:**
-1. --on and --off flag parsing (command strings)
-2. State change event → command dispatch in goroutine
-3. text/template substitution ({{.CameraID}}, {{.Device}}, {{.State}})
-4. Command timeout and cancellation (via context)
-5. Prevent overlapping command execution for same state
+1. ✅ --on and --off flag parsing (command strings)
+2. ✅ State change event → command dispatch in goroutine
+3. ✅ text/template substitution ({{.CameraID}}, {{.Device}}, {{.State}})
+4. ✅ Command timeout and cancellation (via context)
+5. ✅ Prevent overlapping command execution for same state
 
 **Success criteria:** `on-a-meet detect --on "echo on-{{.CameraID}}" --off "echo off"` prints correct template output on transition.
+**Completed:** 2026-05-28
 
 ---
 

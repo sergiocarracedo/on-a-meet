@@ -7,6 +7,7 @@ type Config struct {
 	OffCommand   string `mapstructure:"off-command"`
 	DetectMethod string `mapstructure:"detect-method"`
 	Debounce     int    `mapstructure:"debounce"`
+	Timeout      string `mapstructure:"timeout"`
 }
 
 func Defaults() Config {
@@ -14,5 +15,6 @@ func Defaults() Config {
 		Interval:     "1s",
 		DetectMethod: "v4l2",
 		Debounce:     3,
+		Timeout:      "30s",
 	}
 }

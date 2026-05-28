@@ -4,7 +4,7 @@
 
 **Milestone:** v1 — Initial release
 **Phase:** 1 — Project Scaffold & CLI Foundation
-**Status:** planning
+**Status:** planning (2 plans in 2 waves)
 **Last updated:** 2026-05-28
 
 ## Project Summary

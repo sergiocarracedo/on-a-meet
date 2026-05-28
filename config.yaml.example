@@ -11,9 +11,13 @@ interval: "1s"
 
 # Command to execute when camera turns on
 # Supports template variables: {{.CameraID}}, {{.Device}}, {{.State}}
+#   {{.CameraID}} — short device name, e.g. "video0"
+#   {{.Device}}   — full device path, e.g. "/dev/video0"
+#   {{.State}}    — "on" or "off"
 on-command: ""
 
 # Command to execute when camera turns off
+# Supports same template variables as on-command.
 off-command: ""
 
 # Detection method: "v4l2" or "lsof" (future)
@@ -21,3 +25,7 @@ detect-method: "v4l2"
 
 # Number of consecutive same-state polls before firing (debounce)
 debounce: 3
+
+# Command execution timeout (Go duration format: 10s, 30s, 1m)
+# Set to 0 for no timeout (command runs until completion)
+timeout: "30s"

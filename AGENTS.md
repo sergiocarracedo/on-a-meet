@@ -4,8 +4,15 @@
 
 **Milestone:** v1 — Initial release
 **Phase:** 1 — Project Scaffold & CLI Foundation ✓ complete → Phase 2 — Camera Detection Engine
-**Status:** verifying
+**Status:** planning
 **Last updated:** 2026-05-28
+
+## Phase 2 Plans
+
+| Wave | Plan | Objective | Files |
+|------|------|-----------|-------|
+| 1 | 02-01 | V4L2 detector backend (interface + V4L2Detector) | internal/detector/ |
+| 2 | 02-02 | Polling engine + detect command wiring | internal/engine/, cmd/detect.go |
 
 ## Project Summary
 

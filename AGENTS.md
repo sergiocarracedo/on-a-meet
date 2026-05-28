@@ -3,8 +3,8 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 3 — Command Execution & Templates
-**Status:** planning
+**Phase:** 3 — Command Execution & Templates ✅ complete → Phase 4 — Service Installation
+**Status:** verifying
 **Last updated:** 2026-05-28
 
 ## Project Summary
@@ -35,7 +35,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/STATE.md` — Project state and session tracking
 - `.planning/phases/01-project-scaffold-cli-foundation/` — Phase 1 context, plans, summaries
 
-## Phase 3 Plans
+## Phase 3 ✅ Complete
 
 | Plan | Wave | Objective | Key Files |
 |------|------|-----------|-----------|
@@ -48,7 +48,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 ├── main.go               # Entry point
 ├── cmd/
 │   ├── root.go           # Root command, Viper config, flags
-│   ├── detect.go         # detect subcommand (stub)
+│   ├── detect.go         # detect subcommand — V4L2 polling + command execution
 │   ├── list.go           # list subcommand (stub)
 │   ├── install.go        # install subcommand (stub)
 │   └── uninstall.go      # uninstall subcommand (stub)

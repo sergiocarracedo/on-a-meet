@@ -1,0 +1,20 @@
+config.yaml.example
+  s_57c2e42c824788::t_94a860f4779b3f 14-16,20
+  s_57c2e42c824788::t_c74ef68c9d2dca 28-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a8da70e8f4aecbdcd9b2efbe9741a282fa1aae76",
+  "prompts": {},
+  "sessions": {
+    "s_57c2e42c824788": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_191c58891ffeV4zFI4TtljUMfe",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>"
+    }
+  }
+}

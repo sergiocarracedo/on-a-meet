@@ -3,8 +3,8 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 1 — Project Scaffold & CLI Foundation
-**Status:** planning (2 plans in 2 waves)
+**Phase:** 1 — Project Scaffold & CLI Foundation ✓ complete → Phase 2 — Camera Detection Engine
+**Status:** verifying
 **Last updated:** 2026-05-28
 
 ## Project Summary
@@ -32,6 +32,29 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/REQUIREMENTS.md` — REQ-001 through REQ-017
 - `.planning/ROADMAP.md` — 5 phases
 - `.planning/research/` — Stack, Features, Architecture, Pitfalls, Summary
+- `.planning/STATE.md` — Project state and session tracking
+- `.planning/phases/01-project-scaffold-cli-foundation/` — Phase 1 context, plans, summaries
+
+## Project Structure
+
+```
+├── main.go               # Entry point
+├── cmd/
+│   ├── root.go           # Root command, Viper config, flags
+│   ├── detect.go         # detect subcommand (stub)
+│   ├── list.go           # list subcommand (stub)
+│   ├── install.go        # install subcommand (stub)
+│   └── uninstall.go      # uninstall subcommand (stub)
+├── internal/
+│   ├── config/
+│   │   ├── config.go     # Config struct & defaults
+│   │   └── config_test.go
+│   └── output/
+│       ├── output.go     # pterm wrapper functions
+│       └── output_test.go
+├── config.yaml.example
+├── go.mod / go.sum
+```
 
 ## Commands
 

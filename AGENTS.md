@@ -3,16 +3,9 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 1 — Project Scaffold & CLI Foundation ✓ complete → Phase 2 — Camera Detection Engine
-**Status:** planning
+**Phase:** 2 — Camera Detection Engine ✓ complete → Phase 3 — Command Execution & Templates
+**Status:** executing
 **Last updated:** 2026-05-28
-
-## Phase 2 Plans
-
-| Wave | Plan | Objective | Files |
-|------|------|-----------|-------|
-| 1 | 02-01 | V4L2 detector backend (interface + V4L2Detector) | internal/detector/ |
-| 2 | 02-02 | Polling engine + detect command wiring | internal/engine/, cmd/detect.go |
 
 ## Project Summary
 
@@ -28,7 +21,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 
 ## Architecture
 
-- Pluggable detection backends behind `Detector` interface: `Detect(devicePath) (bool, error)`
+- Pluggable detection backends behind `Detector` interface: `Detect(devicePath) (DeviceStatus, error)` and `ListDevices() ([]DeviceInfo, error)`
 - Polling engine with state machine, debounce (N consecutive same-state polls)
 - Command execution via goroutines with text/template substitution
 - Config merged via Viper: CLI flags > env vars > YAML config > defaults
@@ -56,6 +49,13 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 │   ├── config/
 │   │   ├── config.go     # Config struct & defaults
 │   │   └── config_test.go
+│   ├── detector/
+│   │   ├── interface.go  # Detector interface, DeviceStatus, DeviceInfo
+│   │   ├── v4l2_linux.go # V4L2Detector — syscall-based camera detection
+│   │   └── v4l2_stub.go  # Non-Linux stub
+│   ├── engine/
+│   │   ├── engine.go     # Polling engine with debounce, hotplug, filtering
+│   │   └── engine_test.go
 │   └── output/
 │       ├── output.go     # pterm wrapper functions
 │       └── output_test.go

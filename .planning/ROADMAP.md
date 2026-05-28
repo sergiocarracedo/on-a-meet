@@ -18,7 +18,7 @@
 
 ---
 
-## Phase 2: Camera Detection Engine
+## Phase 2: Camera Detection Engine ✅
 
 **Goal:** Detect camera on/off state and fire commands on transitions.
 
@@ -35,6 +35,7 @@
 8. Permission check at startup with user-friendly error
 
 **Success criteria:** Running `on-a-meet detect --interval 500ms` shows camera state changes in terminal output.
+**Completed:** 2026-05-28
 
 ---
 

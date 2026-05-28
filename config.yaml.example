@@ -1,0 +1,23 @@
+# on-a-meet configuration file
+# Place at ~/.config/on-a-meet/config.yaml
+# CLI flags override these values.
+
+# Target specific camera device path (e.g., /dev/video0)
+# If empty, monitors all cameras with OR logic.
+camera: ""
+
+# Polling interval (Go duration format: 500ms, 1s, 2s)
+interval: "1s"
+
+# Command to execute when camera turns on
+# Supports template variables: {{.CameraID}}, {{.Device}}, {{.State}}
+on-command: ""
+
+# Command to execute when camera turns off
+off-command: ""
+
+# Detection method: "v4l2" or "lsof" (future)
+detect-method: "v4l2"
+
+# Number of consecutive same-state polls before firing (debounce)
+debounce: 3

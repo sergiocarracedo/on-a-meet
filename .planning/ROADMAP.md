@@ -1,19 +1,20 @@
 # Roadmap — on-a-meet
 
-## Phase 1: Project Scaffold & CLI Foundation
+## Phase 1: Project Scaffold & CLI Foundation ✅
 
 **Goal:** Runnable binary with cobra commands, config layer, and pterm output.
 
 **Requirements:** REQ-001 (partial: scaffold only), REQ-007 (config file)
 
 **Tasks:**
-1. Initialize Go module with dependencies (cobra, viper, pterm, kardianos/service)
-2. Create cobra root command with subcommand structure (detect, list, install)
-3. Implement Viper config layer — YAML reading, CLI flag binding, precedence
-4. Create config.yaml.example
-5. pterm output helpers for terminal formatting
+1. ✅ Initialize Go module with dependencies (cobra, viper, pterm, kardianos/service)
+2. ✅ Create cobra root command with subcommand structure (detect, list, install)
+3. ✅ Implement Viper config layer — YAML reading, CLI flag binding, precedence
+4. ✅ Create config.yaml.example
+5. ✅ pterm output helpers for terminal formatting
 
 **Success criteria:** `on-a-meet --help` shows all subcommands. `--config ./config.yaml` is accepted.
+**Completed:** 2026-05-28
 
 ---
 

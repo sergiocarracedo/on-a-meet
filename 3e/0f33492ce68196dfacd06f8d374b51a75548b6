@@ -1,0 +1,19 @@
+internal/detector/interface.go
+  s_57c2e42c824788::t_3747b229dbbece 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3e0f33492ce68196dfacd06f8d374b51a75548b6",
+  "prompts": {},
+  "sessions": {
+    "s_57c2e42c824788": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_191c58891ffeV4zFI4TtljUMfe",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>"
+    }
+  }
+}

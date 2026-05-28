@@ -27,7 +27,7 @@
 | 2026-05-28 | discuss-phase 2 | 4 gray areas discussed, decisions captured |
 | 2026-05-28 | plan-phase 2 | 2 plans created across 2 waves, research + verification passed |
 | 2026-05-28 | execute-phase 2 | Phase 2 implemented and verified — 8 tests passing |
+| 2026-05-28 | discuss-phase 3 | 6 gray areas discussed, decisions captured |
 
 ## Next
-- `discuss-phase 3` — Discuss phase 3 (Command Execution & Templates) gray areas
-- `plan-phase 3` — Plan phase 3
+- `plan-phase 3` — Plan phase 3 (Command Execution & Templates)

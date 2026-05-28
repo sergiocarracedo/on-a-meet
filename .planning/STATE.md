@@ -16,6 +16,15 @@
 **Plans:** 2 plans, 2 waves — all executed
 **Verification:** Passed — 8/8 tests passing
 
+## Phase 3: Command Execution & Templates
+
+**Status:** 🔵 Planning (2026-05-28)
+**Last action:** plan-phase 3 (2026-05-28)
+**Context file:** `.planning/phases/03-command-execution-templates/03-CONTEXT.md`
+**Plans:** 2 plans, 2 waves — ready for execution
+**Research:** Completed — `03-RESEARCH.md` (exec.CommandContext, template, process group management)
+**Verification:** Passed — all CONTEXT.md decisions honored, requirements covered
+
 ## Sessions
 
 | Date | Workflow | Result |
@@ -28,6 +37,7 @@
 | 2026-05-28 | plan-phase 2 | 2 plans created across 2 waves, research + verification passed |
 | 2026-05-28 | execute-phase 2 | Phase 2 implemented and verified — 8 tests passing |
 | 2026-05-28 | discuss-phase 3 | 6 gray areas discussed, decisions captured |
+| 2026-05-28 | plan-phase 3 | 2 plans created across 2 waves, research + verification passed |
 
 ## Next
-- `plan-phase 3` — Plan phase 3 (Command Execution & Templates)
+- `execute-phase 3` — Execute phase 3 (Command Execution & Templates)

@@ -3,8 +3,8 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 2 — Camera Detection Engine ✓ complete → Phase 3 — Command Execution & Templates
-**Status:** executing
+**Phase:** 3 — Command Execution & Templates
+**Status:** planning
 **Last updated:** 2026-05-28
 
 ## Project Summary
@@ -35,6 +35,13 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/STATE.md` — Project state and session tracking
 - `.planning/phases/01-project-scaffold-cli-foundation/` — Phase 1 context, plans, summaries
 
+## Phase 3 Plans
+
+| Plan | Wave | Objective | Key Files |
+|------|------|-----------|-----------|
+| 03-01 | 1 | Executor package + config + tests | `internal/executor/executor.go`, `internal/config/config.go` |
+| 03-02 | 2 | Wire executor into detect command | `cmd/detect.go`, `config.yaml.example` |
+
 ## Project Structure
 
 ```
@@ -56,6 +63,9 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 │   ├── engine/
 │   │   ├── engine.go     # Polling engine with debounce, hotplug, filtering
 │   │   └── engine_test.go
+│   ├── executor/
+│   │   ├── executor.go   # Command execution with templates, timeout, overlap prevention
+│   │   └── executor_test.go
 │   └── output/
 │       ├── output.go     # pterm wrapper functions
 │       └── output_test.go

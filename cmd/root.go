@@ -6,11 +6,15 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/sergiocarracedo/on-a-meet/internal/output"
 )
 
 var (
-	version = "dev"
-	cfgFile string
+	version    = "dev"
+	cfgFile    string
+	cfgSilent  bool
+	cfgVerbose bool
 
 	rootCmd = &cobra.Command{
 		Use:     "on-a-meet",
@@ -35,6 +39,11 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default $HOME/.config/on-a-meet/config.yaml)")
+	rootCmd.PersistentFlags().BoolVarP(&cfgSilent, "silent", "s", false, "suppress all output")
+	rootCmd.PersistentFlags().BoolVarP(&cfgVerbose, "verbose", "V", false, "enable debug output")
+
+	viper.BindPFlag("silent", rootCmd.PersistentFlags().Lookup("silent"))
+	viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 }
 
 func initConfig() {
@@ -52,6 +61,8 @@ func initConfig() {
 
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("ON_A_MEET")
+
+	output.Init(cfgSilent, cfgVerbose)
 
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())

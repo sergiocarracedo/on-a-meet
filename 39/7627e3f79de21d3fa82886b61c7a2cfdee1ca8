@@ -1,0 +1,23 @@
+cmd/detect.go
+  s_57c2e42c824788::t_d59c3c81dfdbd6 15
+  s_57c2e42c824788::t_4fd5e5ae205f59 24
+  s_57c2e42c824788::t_8aa8b358691edb 62-68,80-91,94-105
+  s_57c2e42c824788::t_ae7ff6f3f02abe 150-152,160-162
+  s_57c2e42c824788::t_c01f5414b04f4c 137,143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "397627e3f79de21d3fa82886b61c7a2cfdee1ca8",
+  "prompts": {},
+  "sessions": {
+    "s_57c2e42c824788": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_191c58891ffeV4zFI4TtljUMfe",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>"
+    }
+  }
+}

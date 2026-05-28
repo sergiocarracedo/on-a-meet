@@ -12,6 +12,7 @@ import (
 
 	"github.com/sergiocarracedo/on-a-meet/internal/detector"
 	"github.com/sergiocarracedo/on-a-meet/internal/engine"
+	"github.com/sergiocarracedo/on-a-meet/internal/executor"
 	"github.com/sergiocarracedo/on-a-meet/internal/output"
 )
 
@@ -20,6 +21,7 @@ var (
 	detectInterval string
 	detectOnCmd    string
 	detectOffCmd   string
+	detectTimeout  string
 )
 
 var detectCmd = &cobra.Command{
@@ -57,6 +59,13 @@ Uses V4L2 by default to check /dev/video* device status.`,
 			output.Info.Printfln("  %s — %s (driver: %s)", d.Path, d.Card, d.Driver)
 		}
 
+		timeout, err := time.ParseDuration(cfg.Timeout)
+		if err != nil {
+			return err
+		}
+
+		exec := executor.New(timeout)
+
 		eng := engine.New(det,
 			engine.WithInterval(interval),
 			engine.WithDebounce(cfg.Debounce),
@@ -68,8 +77,32 @@ Uses V4L2 by default to check /dev/video* device status.`,
 					output.Warning.Printfln("[-] %s disconnected", path)
 				case newState:
 					output.Warning.Printfln("%s ⟶ ON  (driver: %s)", path, info.Driver)
+					if cfg.OnCmd != "" {
+						go func() {
+							data := executor.TemplateData{
+								CameraID: path[5:],
+								Device:   path,
+								State:    "on",
+							}
+							if err := exec.ExecOn(context.Background(), cfg.OnCmd, data); err != nil {
+								output.Warning.Printfln("on-command failed: %v", err)
+							}
+						}()
+					}
 				default:
 					output.Info.Printfln("%s ⟶ OFF  (driver: %s)", path, info.Driver)
+					if cfg.OffCmd != "" {
+						go func() {
+							data := executor.TemplateData{
+								CameraID: path[5:],
+								Device:   path,
+								State:    "off",
+							}
+							if err := exec.ExecOff(context.Background(), cfg.OffCmd, data); err != nil {
+								output.Warning.Printfln("off-command failed: %v", err)
+							}
+						}()
+					}
 				}
 			}),
 		)
@@ -101,17 +134,22 @@ func init() {
 	detectCmd.Flags().StringVarP(&detectInterval, "interval", "i", "1s", "polling interval")
 	detectCmd.Flags().StringVarP(&detectOnCmd, "on", "", "", "command to run when camera turns on")
 	detectCmd.Flags().StringVarP(&detectOffCmd, "off", "", "", "command to run when camera turns off")
+	detectCmd.Flags().StringVarP(&detectTimeout, "timeout", "t", "30s", "command execution timeout (0 for no timeout)")
 
 	viper.BindPFlag("camera", detectCmd.Flags().Lookup("camera"))
 	viper.BindPFlag("interval", detectCmd.Flags().Lookup("interval"))
 	viper.BindPFlag("on-command", detectCmd.Flags().Lookup("on"))
 	viper.BindPFlag("off-command", detectCmd.Flags().Lookup("off"))
+	viper.BindPFlag("timeout", detectCmd.Flags().Lookup("timeout"))
 }
 
 type detectConfig struct {
 	Camera   string
 	Interval string
 	Debounce int
+	OnCmd    string
+	OffCmd   string
+	Timeout  string
 }
 
 func configFromViper() detectConfig {
@@ -119,5 +157,8 @@ func configFromViper() detectConfig {
 		Camera:   viper.GetString("camera"),
 		Interval: viper.GetString("interval"),
 		Debounce: viper.GetInt("debounce"),
+		OnCmd:    viper.GetString("on-command"),
+		OffCmd:   viper.GetString("off-command"),
+		Timeout:  viper.GetString("timeout"),
 	}
 }

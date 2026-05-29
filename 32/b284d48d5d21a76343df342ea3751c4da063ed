@@ -1,0 +1,27 @@
+install.sh
+  s_57c2e42c824788::t_f8ded0f8dafb05 1-63
+README.md
+  s_57c2e42c824788::t_68d7219f7ca795 7-14
+  h_f90ee31b03fc41 66,68-69,102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "32b284d48d5d21a76343df342ea3751c4da063ed",
+  "prompts": {},
+  "humans": {
+    "h_f90ee31b03fc41": {
+      "author": "Sergio Carracedo <hi@sergiocarracedo.es>"
+    }
+  },
+  "sessions": {
+    "s_57c2e42c824788": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_191c58891ffeV4zFI4TtljUMfe",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>"
+    }
+  }
+}

@@ -1,0 +1,298 @@
+package cmd
+
+import (
+	"bufio"
+	"encoding/json"
+	"fmt"
+	"os"
+	"strconv"
+	"time"
+
+	"github.com/charmbracelet/huh"
+	"github.com/spf13/cobra"
+
+	"github.com/sergiocarracedo/on-a-meet/internal/detector"
+	"github.com/sergiocarracedo/on-a-meet/internal/output"
+)
+
+type onboardConfig struct {
+	Cameras  []string `json:"cameras"`
+	Method   string   `json:"method"`
+	Debounce int      `json:"debounce"`
+	Interval string   `json:"interval"`
+}
+
+var onboardDryRun bool
+
+var onboardCmd = &cobra.Command{
+	Use:   "onboard",
+	Short: "Guided camera monitor setup",
+	Long: `Interactive wizard that walks through camera selection,
+detection method configuration with live testing, and
+automatic service installation.
+
+Run without flags for the full interactive setup.
+Use --dry-run to preview the config before installing.`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		det, err := detector.New("v4l2")
+		if err != nil {
+			return fmt.Errorf("failed to create detector: %w", err)
+		}
+
+		devices, err := det.ListDevices()
+		if err != nil {
+			return fmt.Errorf("failed to list devices: %w", err)
+		}
+		if len(devices) == 0 {
+			output.Warning.Println("No camera devices detected.")
+			output.Info.Println("Connect a camera and try again.")
+			os.Exit(1)
+		}
+
+		output.Banner(len(devices))
+		for _, d := range devices {
+			output.Info.Printfln("  %s — %s (driver: %s)", d.Path, d.Card, d.Driver)
+		}
+
+		deviceOpts := make([]huh.Option[string], 0, len(devices)+1)
+		deviceOpts = append(deviceOpts, huh.NewOption("All cameras", "__all__"))
+		for _, d := range devices {
+			deviceOpts = append(deviceOpts, huh.NewOption(d.Path, d.Path))
+		}
+
+		var camSelections []string
+		var method string
+		var debounceStr string
+		var intervalStr string
+
+		form := huh.NewForm(
+			huh.NewGroup(
+				huh.NewMultiSelect[string]().
+					Title("Cameras to monitor").
+					Description("Select which cameras to monitor (Space to toggle)").
+					Options(deviceOpts...).
+					Value(&camSelections),
+			),
+			huh.NewGroup(
+				huh.NewNote().Title("Detection methods").
+					Description("V4L2: Direct kernel syscall (Linux-only, faster, no extra deps)\nLSOF: Uses 'lsof' command (cross-platform, requires lsof installed)"),
+				huh.NewSelect[string]().
+					Title("Detection method").
+					Options(
+						huh.NewOption("V4L2 (recommended)", "v4l2"),
+						huh.NewOption("lsof", "lsof"),
+					).
+					Value(&method),
+			),
+			huh.NewGroup(
+				huh.NewInput().
+					Title("Debounce count").
+					Description("Required consecutive same-state polls before firing (higher = less false positives)").
+					Placeholder("2").
+					Validate(func(s string) error {
+						if s == "" {
+							return nil
+						}
+						v, err := strconv.Atoi(s)
+						if err != nil {
+							return fmt.Errorf("must be a number")
+						}
+						if v < 1 {
+							return fmt.Errorf("must be at least 1")
+						}
+						return nil
+					}).
+					Value(&debounceStr),
+				huh.NewInput().
+					Title("Poll interval").
+					Description("How often to check camera state (e.g., 500ms, 1s, 2s)").
+					Placeholder("1s").
+					Validate(func(s string) error {
+						if s == "" {
+							return nil
+						}
+						_, err := time.ParseDuration(s)
+						return err
+					}).
+					Value(&intervalStr),
+			),
+		)
+
+		if err := form.Run(); err != nil {
+			return fmt.Errorf("form cancelled: %w", err)
+		}
+
+		if len(camSelections) == 0 {
+			output.Warning.Println("No cameras selected. Exiting.")
+			os.Exit(1)
+		}
+
+		cameras := camSelections
+		for i, c := range cameras {
+			if c == "__all__" {
+				cameras = make([]string, 0, len(devices))
+				for _, d := range devices {
+					cameras = append(cameras, d.Path)
+				}
+				_ = i
+				break
+			}
+		}
+
+		debounce := 2
+		if debounceStr != "" {
+			v, _ := strconv.Atoi(debounceStr)
+			if v > 0 {
+				debounce = v
+			}
+		}
+
+		interval := intervalStr
+		if interval == "" {
+			interval = "1s"
+		}
+
+		testDet, err := detector.New(method)
+		if err != nil {
+			return fmt.Errorf("failed to create detector for test: %w", err)
+		}
+
+		reader := bufio.NewReader(os.Stdin)
+
+		for {
+			output.Warning.Println("Enable your camera now (open a video app), then press Enter to test detection...")
+			reader.ReadString('\n')
+
+			allOK := true
+			for _, cam := range cameras {
+				status, err := testDet.Detect(cam)
+				if err != nil {
+					output.Warning.Printfln("  %s: detection error: %v", cam, err)
+					allOK = false
+					continue
+				}
+				stateStr := "OFF"
+				if status.On {
+					stateStr = "ON"
+				}
+				output.Info.Printfln("  %s ⟶ %s", cam, stateStr)
+				if !status.On {
+					allOK = false
+				}
+			}
+
+			if !allOK {
+				output.Warning.Println("Some cameras were not detected as ON. Try again?")
+				var retry bool
+				err := huh.NewConfirm().
+					Title("Detection test").
+					Description("Camera was expected to show ON but detected differently. Retry?").
+					Affirmative("Retry").
+					Negative("Skip test").
+					Value(&retry).Run()
+				if err != nil || !retry {
+					break
+				}
+				continue
+			}
+			break
+		}
+
+		for {
+			output.Warning.Println("Disable your camera now (close the video app), then press Enter to confirm detection...")
+			reader.ReadString('\n')
+
+			allOK := true
+			for _, cam := range cameras {
+				status, err := testDet.Detect(cam)
+				if err != nil {
+					output.Warning.Printfln("  %s: detection error: %v", cam, err)
+					allOK = false
+					continue
+				}
+				stateStr := "OFF"
+				if status.On {
+					stateStr = "ON"
+				}
+				output.Info.Printfln("  %s ⟶ %s", cam, stateStr)
+				if status.On {
+					allOK = false
+				}
+			}
+
+			if !allOK {
+				output.Warning.Println("Some cameras were not detected as OFF. Try again?")
+				var retryOff bool
+				err := huh.NewConfirm().
+					Title("Off detection test").
+					Description("Camera was expected to show OFF but is still detected as ON. Retry?").
+					Affirmative("Retry").
+					Negative("Skip test").
+					Value(&retryOff).Run()
+				if err != nil || !retryOff {
+					break
+				}
+				continue
+			}
+			break
+		}
+
+		cfg := onboardConfig{
+			Cameras:  cameras,
+			Method:   method,
+			Debounce: debounce,
+			Interval: interval,
+		}
+
+		if onboardDryRun {
+			output.Success.Println("Configuration preview:")
+			fmt.Printf("detect-method: %s\n", cfg.Method)
+			fmt.Printf("interval: %s\n", cfg.Interval)
+			fmt.Printf("debounce: %d\n", cfg.Debounce)
+			if len(cfg.Cameras) == 1 {
+				fmt.Printf("camera: %s\n", cfg.Cameras[0])
+			} else {
+				fmt.Println("cameras:")
+				for _, cam := range cfg.Cameras {
+					fmt.Printf("  - %s\n", cam)
+				}
+			}
+			fmt.Println("\nRun without --dry-run to write config and install the service.")
+			return nil
+		}
+
+		var confirm bool
+		err = huh.NewConfirm().
+			Title("Ready to install").
+			Description(fmt.Sprintf("Method: %s | Interval: %s | Debounce: %d | Cameras: %d\nThis will write config and install the service (requires sudo).", method, interval, debounce, len(cameras))).
+			Affirmative("Install").
+			Negative("Abort").
+			Value(&confirm).Run()
+		if err != nil || !confirm {
+			output.Info.Println("Install cancelled.")
+			return nil
+		}
+
+		data, err := json.MarshalIndent(cfg, "", "  ")
+		if err != nil {
+			return fmt.Errorf("failed to marshal config: %w", err)
+		}
+
+		tmpPath := "/tmp/on-a-meet-onboard.json"
+		if err := os.WriteFile(tmpPath, data, 0644); err != nil {
+			return fmt.Errorf("failed to write temp config: %w", err)
+		}
+		output.Success.Printfln("Config saved to %s", tmpPath)
+
+		output.Info.Printfln("")
+		output.Info.Printfln("Re-run with sudo to apply and install:")
+		output.Info.Printfln("  sudo on-a-meet onboard --apply %s", tmpPath)
+
+		return nil
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(onboardCmd)
+	onboardCmd.Flags().BoolVar(&onboardDryRun, "dry-run", false, "preview config without installing")
+}

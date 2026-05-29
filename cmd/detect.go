@@ -82,6 +82,9 @@ Uses V4L2 by default (lsof also available) to check /dev/video* device status.`,
 		}
 
 		exec := executor.New(timeout)
+		if cfg.EnvironmentFile != "" {
+			exec.SetEnvFile(cfg.EnvironmentFile)
+		}
 
 		eng := engine.New(det,
 			engine.WithInterval(interval),
@@ -163,13 +166,14 @@ func init() {
 }
 
 type detectConfig struct {
-	Camera       string
-	Interval     string
-	Debounce     int
-	OnCmd        string
-	OffCmd       string
-	Timeout      string
-	DetectMethod string
+	Camera          string
+	Interval        string
+	Debounce        int
+	OnCmd           string
+	OffCmd          string
+	Timeout         string
+	DetectMethod    string
+	EnvironmentFile string
 }
 
 func configFromViper(detectChanged bool) detectConfig {
@@ -178,12 +182,13 @@ func configFromViper(detectChanged bool) detectConfig {
 		method = viper.GetString("detect-method")
 	}
 	return detectConfig{
-		Camera:       viper.GetString("camera"),
-		Interval:     viper.GetString("interval"),
-		Debounce:     viper.GetInt("debounce"),
-		OnCmd:        viper.GetString("on-command"),
-		OffCmd:       viper.GetString("off-command"),
-		Timeout:      viper.GetString("timeout"),
-		DetectMethod: method,
+		Camera:          viper.GetString("camera"),
+		Interval:        viper.GetString("interval"),
+		Debounce:        viper.GetInt("debounce"),
+		OnCmd:           viper.GetString("on-command"),
+		OffCmd:          viper.GetString("off-command"),
+		Timeout:         viper.GetString("timeout"),
+		DetectMethod:    method,
+		EnvironmentFile: viper.GetString("environment-file"),
 	}
 }

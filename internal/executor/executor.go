@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"sync"
 	"syscall"
 	"text/template"
@@ -23,6 +24,11 @@ type TemplateData struct {
 type Executor struct {
 	timeout time.Duration
 	running sync.Map
+	envFile string
+}
+
+func (e *Executor) SetEnvFile(path string) {
+	e.envFile = path
 }
 
 func New(timeout time.Duration) *Executor {
@@ -35,6 +41,30 @@ func (e *Executor) ExecOn(ctx context.Context, cmdStr string, data TemplateData)
 
 func (e *Executor) ExecOff(ctx context.Context, cmdStr string, data TemplateData) error {
 	return e.exec(ctx, cmdStr, data, "off")
+}
+
+func (e *Executor) parseEnvFile() map[string]string {
+	vars := make(map[string]string)
+	if e.envFile == "" {
+		return vars
+	}
+	data, err := os.ReadFile(e.envFile)
+	if err != nil {
+		output.Debug.Printfln("env file %s: %v", e.envFile, err)
+		return vars
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		line = strings.TrimPrefix(line, "export ")
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) == 2 {
+			vars[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
+		}
+	}
+	return vars
 }
 
 func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, state string) error {
@@ -65,10 +95,24 @@ func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, s
 		return fmt.Errorf("template execute error: %w", err)
 	}
 	rendered := buf.String()
-	rendered = os.ExpandEnv(rendered)
+
+	fileVars := e.parseEnvFile()
+	rendered = os.Expand(rendered, func(key string) string {
+		if v, ok := fileVars[key]; ok {
+			return v
+		}
+		return os.Getenv(key)
+	})
 
 	cmd := exec.CommandContext(cmdCtx, "sh", "-c", rendered)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+
+	if len(fileVars) > 0 {
+		cmd.Env = os.Environ()
+		for k, v := range fileVars {
+			cmd.Env = append(cmd.Env, k+"="+v)
+		}
+	}
 
 	cmd.Cancel = func() error {
 		if cmd.Process != nil && cmd.Process.Pid > 0 {

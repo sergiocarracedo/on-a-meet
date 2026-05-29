@@ -57,7 +57,7 @@
 
 ---
 
-## Phase 4: Service Installation
+## Phase 4: Service Installation ✅
 
 **Goal:** Install/uninstall as systemd service with proper error handling.
 
@@ -70,6 +70,7 @@
 4. Service unit generation with correct binary path and config flags
 
 **Success criteria:** `sudo on-a-meet install` creates working systemd service. `on-a-meet uninstall` removes it.
+**Completed:** 2026-05-29
 
 ---
 

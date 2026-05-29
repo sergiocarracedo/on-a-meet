@@ -3,9 +3,9 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 4 — Service Installation
-**Status:** planning
-**Last updated:** 2026-05-28
+**Phase:** 4 — Service Installation ✅ complete → Phase 5 — lsof Backend & Polish
+**Status:** complete
+**Last updated:** 2026-05-29
 
 ## Project Summary
 
@@ -35,7 +35,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/STATE.md` — Project state and session tracking
 - `.planning/phases/01-project-scaffold-cli-foundation/` — Phase 1 context, plans, summaries
 
-## Phase 4 — Planning
+## Phase 4 ✅ Complete
 
 | Plan | Wave | Depends | Objective | Key Files |
 |------|------|---------|-----------|-----------|
@@ -57,8 +57,8 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 │   ├── root.go           # Root command, Viper config, flags
 │   ├── detect.go         # detect subcommand — V4L2 polling + command execution
 │   ├── list.go           # list subcommand (stub)
-│   ├── install.go        # install subcommand (stub)
-│   └── uninstall.go      # uninstall subcommand (stub)
+│   ├── install.go        # install subcommand — kardianos/service Install()+Start()
+│   └── uninstall.go      # uninstall subcommand — kardianos/service Stop()+Uninstall()
 ├── internal/
 │   ├── config/
 │   │   ├── config.go     # Config struct & defaults

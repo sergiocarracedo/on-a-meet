@@ -27,12 +27,13 @@
 
 ## Phase 4: Service Installation
 
-**Status:** 🔄 Planning (2026-05-28)
-**Last action:** plan-phase 4 (2026-05-28)
+**Status:** ✅ Complete (2026-05-29)
+**Last action:** execute-phase 4 (2026-05-29)
 **Context file:** `.planning/phases/04-service-installation/04-CONTEXT.md`
 **Decisions:** 5 areas discussed — integration pattern, service arguments, lifecycle, binary path, sudo handling
 **Research:** Completed — `04-RESEARCH.md` (kardianos/service one-shot API, sudo check, binary path)
-**Plans:** 2 plans across 2 waves
+**Plans:** 2 plans, 2 waves — all executed
+**Verification:** Passed — build passes, all must-haves met
 | | Date | Workflow | Result |
 | |------|----------|--------|
 | | 2026-05-28 | new-project | Milestone v1 initialized, 5-phase roadmap, 12 requirements |
@@ -47,6 +48,7 @@
 | | 2026-05-28 | execute-phase 3 | Phase 3 implemented and verified — 22 tests passing |
 | | 2026-05-28 | discuss-phase 4 | 5 gray areas discussed, decisions captured |
 | | 2026-05-28 | plan-phase 4 | 2 plans created across 2 waves, research + verification passed |
+| | 2026-05-29 | execute-phase 4 | Phase 4 implemented and verified — build passes, all tests passing |
 
 ## Next
-- `execute-phase 4` — Execute phase 4 (Service Installation)
+- `discuss-phase 5` — Discuss Phase 5 (lsof Backend & Polish)

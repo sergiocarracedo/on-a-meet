@@ -109,6 +109,7 @@
 | 026 | Add install.sh script + curl-pipe-install in README | 2026-05-29 | `32b284d` | `quick/026-install-sh-script/` |
 | 027 | Add README explanation about environment file | 2026-05-29 | `51e0114` | `quick/027-readme-environment-file/` |
 | 028 | Explain video group risk and recommend sudo/service | 2026-05-29 | `6422bdf` | `quick/028-linux-permissions-video-group-risk/` |
+| 029 | Add release-please automation with auto-merge | 2026-05-29 | `d21b745` | — |
 
 ## Current Position
 
@@ -116,7 +117,7 @@
 **Phase:** 1 — macOS Detection Backend (complete)
 **Plan:** 08-01 (Wave 1: macOSDetector), 08-02 (Wave 2: README docs)
 **Status:** Phase 1 complete — ready for next milestone or Phase 2
-**Last activity:** 2026-05-29 — Completed quick task 028: explain video group risk and recommend sudo/service
+**Last activity:** 2026-05-29 — Added release-please automation (auto-merge, CI, Homebrew tap)
 
 ## Next
 - Milestone v1.1.0 in progress — define v1.1.0 requirements

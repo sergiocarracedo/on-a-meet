@@ -52,6 +52,8 @@
 | | 2026-05-29 | discuss-phase 5 | 5 gray areas discussed, decisions captured |
 | | 2026-05-29 | plan-phase 5 | 2 plans created across 2 waves, research + verification passed |
 | | 2026-05-29 | execute-phase 5 | Phase 5 implemented and verified — 27 tests passing, goreleaser + README |
+| | 2026-05-29 | add-phase | Phase 6 added: Onboard Command — Assisted Install |
+| | 2026-05-29 | discuss-phase 6 | 4 gray areas discussed: huh lib, --dry-run flag, sudo re-exec, simple detect test |
 
 ## Phase 5: lsof Backend & Polish
 

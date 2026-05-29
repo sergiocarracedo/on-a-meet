@@ -100,3 +100,4 @@
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install
+- 2026-05-29: Phase 7 added: Release Automation & Publishing

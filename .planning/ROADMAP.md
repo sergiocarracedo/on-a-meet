@@ -96,11 +96,48 @@
 
 ```
 Phase 1 (Scaffold) → Phase 2 (Detection) → Phase 3 (Commands) → Phase 4 (Service)
-                                                                      ↕
+                                                                       ↕
 Phase 5 (lsof + Polish) ←──────────────────────────────────────────────┘
 ```
 
 Phase 5 can run in parallel with Phase 4 or independently after Phase 3.
+
+---
+
+## Phase 7: Release Automation & Publishing
+
+**Goal:** Automated GitHub Releases via GoReleaser with Homebrew formula publishing and npm wrapper package.
+**Status:** [ ] Not started
+**Depends on:** Phase 5 (GoReleaser config exists)
+
+### Manual Steps per Platform
+
+#### GitHub Releases
+Already configured via `.goreleaser.yaml`. To trigger:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+#### Homebrew (personal tap)
+1. Create `github.com/{user}/homebrew-tap` repo
+2. Add `HOMEBREW_TAP_GITHUB_TOKEN` secret to GitHub Actions
+3. Update `.goreleaser.yaml` with `brews` section pointing to your tap
+4. On tag push, GoReleaser auto-pushes the formula
+
+#### npm wrapper package
+1. Create `packages/npm/` with:
+   - `package.json` (name, version, bin entry)
+   - `scripts/postinstall.js` (download binary from GitHub Release)
+   - `bin/{name}.js` (shebang + spawn downloaded binary)
+2. Configure npm trusted publishing (id-token: write)
+3. `npm publish --access public`
+
+#### GitHub Actions workflow
+Create `.github/workflows/release.yml` that:
+- Runs on tag push `v*`
+- Executes GoReleaser (builds + Homebrew)
+- Publishes npm package
 
 ---
 *Last updated: 2026-05-29*

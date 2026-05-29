@@ -35,3 +35,21 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+# Homebrew — uncomment after creating github.com/<YOUR_USER>/homebrew-tap repo
+# brews:
+#   - name: on-a-meet
+#     repository:
+#       owner: <YOUR_USER>
+#       name: homebrew-tap
+#       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+#     directory: Formula
+#     commit_author:
+#       name: goreleaser
+#       email: goreleaser@localhost
+#     homepage: "https://github.com/sergiocarracedo/on-a-meet"
+#     description: "CLI tool to detect camera on/off state and trigger commands"
+#     license: "MIT"
+#     skip_upload: auto
+#     install: |
+#       bin.install "on-a-meet"

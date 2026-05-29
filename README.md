@@ -12,6 +12,8 @@ curl -fsSL https://raw.githubusercontent.com/sergiocarracedo/on-a-meet/main/inst
 
 This detects your OS and architecture, downloads the correct binary, and installs it to `/usr/local/bin/`.
 
+## Manual installation
+
 ### Binary (Linux)
 
 Download the latest binary for your platform from the
@@ -99,7 +101,7 @@ Optionally source variables from a file before running `--on`/`--off` commands.
 Variables are loaded as `KEY=VALUE` pairs (shell format, `export` prefix is allowed):
 
 ```yaml
-environment-file: "/etc/default/on-a-meet"
+environment-file: '/etc/default/on-a-meet'
 ```
 
 Example env file (`/etc/default/on-a-meet`):

@@ -26,7 +26,7 @@ var startCmd = &cobra.Command{
 
 		output.Info.Println("Starting service...")
 		if err := svc.Start(); err != nil {
-			return fmt.Errorf("service start failed: %w", err)
+			return fmt.Errorf("service start failed: %w (try 'sudo on-a-meet service install' first)", err)
 		}
 		output.Success.Println("Service started")
 

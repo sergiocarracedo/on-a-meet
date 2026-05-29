@@ -72,6 +72,7 @@ func initConfig() {
 	viper.SetDefault("off-command", "")
 	viper.SetDefault("silent", false)
 	viper.SetDefault("verbose", false)
+	viper.SetDefault("environment-file", "")
 
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())

@@ -3,9 +3,12 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
+	"strings"
 
 	"github.com/kardianos/service"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/sergiocarracedo/on-a-meet/internal/output"
 )
@@ -29,6 +32,27 @@ func serviceConfig(user string) *service.Config {
 	}
 }
 
+func patchUnitEnvironmentFile(envFile string) error {
+	if envFile == "" {
+		return nil
+	}
+	unitPath := "/etc/systemd/system/on-a-meet.service"
+	data, err := os.ReadFile(unitPath)
+	if err != nil {
+		return fmt.Errorf("reading unit file: %w", err)
+	}
+	oldLine := "EnvironmentFile=-/etc/sysconfig/on-a-meet"
+	newLine := "EnvironmentFile=-" + envFile
+	if !strings.Contains(string(data), oldLine) {
+		return nil
+	}
+	content := strings.ReplaceAll(string(data), oldLine, newLine)
+	if err := os.WriteFile(unitPath, []byte(content), 0644); err != nil {
+		return fmt.Errorf("writing unit file: %w", err)
+	}
+	return exec.Command("systemctl", "daemon-reload").Run()
+}
+
 func installService() error {
 	originalUser := os.Getenv("SUDO_USER")
 	svc, err := service.New(&noopProgram{}, serviceConfig(originalUser))
@@ -48,6 +72,10 @@ func installService() error {
 		}
 	}
 	output.Success.Println("Service unit created")
+
+	if err := patchUnitEnvironmentFile(viper.GetString("environment-file")); err != nil {
+		output.Warning.Printfln("Failed to patch environment file path: %v", err)
+	}
 
 	output.Info.Println("Starting service...")
 	if err := svc.Start(); err != nil {

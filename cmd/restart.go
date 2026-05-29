@@ -6,6 +6,7 @@ import (
 
 	"github.com/kardianos/service"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/sergiocarracedo/on-a-meet/internal/output"
 )
@@ -17,6 +18,10 @@ var restartCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if os.Geteuid() != 0 {
 			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet service restart")
+		}
+
+		if err := patchUnitEnvironmentFile(viper.GetString("environment-file")); err != nil {
+			output.Warning.Printfln("Failed to patch environment file path: %v", err)
 		}
 
 		svc, err := service.New(&noopProgram{}, serviceConfig(""))

@@ -29,3 +29,9 @@ debounce: 3
 # Command execution timeout (Go duration format: 10s, 30s, 1m)
 # Set to 0 for no timeout (command runs until completion)
 timeout: "30s"
+
+# Path to an environment file loaded by systemd when running the service.
+# Variables in this file are available to --on / --off commands.
+# Example: /etc/default/on-a-meet  or  /etc/sysconfig/on-a-meet
+# Only used when installed as a system service.
+environment-file: ""

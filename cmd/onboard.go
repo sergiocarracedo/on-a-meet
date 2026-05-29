@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"strconv"
 	"time"
 
 	"github.com/charmbracelet/huh"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 
 	"github.com/sergiocarracedo/on-a-meet/internal/detector"
 	"github.com/sergiocarracedo/on-a-meet/internal/output"
@@ -22,7 +24,17 @@ type onboardConfig struct {
 	Interval string   `json:"interval"`
 }
 
-var onboardDryRun bool
+type writeConfig struct {
+	Camera       string `yaml:"camera,omitempty"`
+	Interval     string `yaml:"interval"`
+	DetectMethod string `yaml:"detect-method"`
+	Debounce     int    `yaml:"debounce"`
+}
+
+var (
+	onboardDryRun bool
+	onboardApply  string
+)
 
 var onboardCmd = &cobra.Command{
 	Use:   "onboard",
@@ -34,6 +46,57 @@ automatic service installation.
 Run without flags for the full interactive setup.
 Use --dry-run to preview the config before installing.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if onboardApply != "" {
+			if os.Geteuid() != 0 {
+				return fmt.Errorf("root privileges required — re-run with sudo: sudo on-a-meet onboard --apply %s", onboardApply)
+			}
+
+			data, err := os.ReadFile(onboardApply)
+			if err != nil {
+				return fmt.Errorf("failed to read config file: %w", err)
+			}
+
+			var cfg onboardConfig
+			if err := json.Unmarshal(data, &cfg); err != nil {
+				return fmt.Errorf("failed to parse config file: %w", err)
+			}
+
+			camera := ""
+			if len(cfg.Cameras) == 1 {
+				camera = cfg.Cameras[0]
+			}
+
+			wc := writeConfig{
+				Camera:       camera,
+				Interval:     cfg.Interval,
+				DetectMethod: cfg.Method,
+				Debounce:     cfg.Debounce,
+			}
+
+			yamlData, err := yaml.Marshal(&wc)
+			if err != nil {
+				return fmt.Errorf("failed to marshal yaml: %w", err)
+			}
+
+			configDir := "/etc/on-a-meet"
+			if err := os.MkdirAll(configDir, 0755); err != nil {
+				return fmt.Errorf("failed to create config directory: %w", err)
+			}
+
+			configPath := configDir + "/config.yaml"
+			if err := os.WriteFile(configPath, yamlData, 0644); err != nil {
+				return fmt.Errorf("failed to write config file: %w", err)
+			}
+			output.Success.Printfln("Config written to %s", configPath)
+
+			if err := installService(); err != nil {
+				return err
+			}
+
+			output.Success.Printfln("Setup complete! Config: %s", configPath)
+			return nil
+		}
+
 		det, err := detector.New("v4l2")
 		if err != nil {
 			return fmt.Errorf("failed to create detector: %w", err)
@@ -282,11 +345,19 @@ Use --dry-run to preview the config before installing.`,
 		if err := os.WriteFile(tmpPath, data, 0644); err != nil {
 			return fmt.Errorf("failed to write temp config: %w", err)
 		}
-		output.Success.Printfln("Config saved to %s", tmpPath)
 
-		output.Info.Printfln("")
-		output.Info.Printfln("Re-run with sudo to apply and install:")
-		output.Info.Printfln("  sudo on-a-meet onboard --apply %s", tmpPath)
+		binary, err := os.Executable()
+		if err != nil {
+			return fmt.Errorf("failed to find binary path: %w", err)
+		}
+
+		output.Info.Printfln("Running with elevated privileges to complete setup...")
+		sudoCmd := exec.Command("sudo", binary, "onboard", "--apply", tmpPath)
+		sudoCmd.Stdout = os.Stdout
+		sudoCmd.Stderr = os.Stderr
+		if err := sudoCmd.Run(); err != nil {
+			return fmt.Errorf("sudo install failed: %w", err)
+		}
 
 		return nil
 	},
@@ -295,4 +366,5 @@ Use --dry-run to preview the config before installing.`,
 func init() {
 	rootCmd.AddCommand(onboardCmd)
 	onboardCmd.Flags().BoolVar(&onboardDryRun, "dry-run", false, "preview config without installing")
+	onboardCmd.Flags().StringVar(&onboardApply, "apply", "", "apply collected config file and install service")
 }

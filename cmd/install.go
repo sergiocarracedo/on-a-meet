@@ -28,6 +28,27 @@ func serviceConfig() *service.Config {
 	}
 }
 
+func installService() error {
+	svc, err := service.New(&noopProgram{}, serviceConfig())
+	if err != nil {
+		return fmt.Errorf("service init failed: %w", err)
+	}
+
+	output.Info.Println("Installing service...")
+	if err := svc.Install(); err != nil {
+		return fmt.Errorf("service install failed: %w", err)
+	}
+	output.Success.Println("Service unit created")
+
+	output.Info.Println("Starting service...")
+	if err := svc.Start(); err != nil {
+		return fmt.Errorf("service start failed: %w", err)
+	}
+	output.Success.Println("Service started")
+
+	return nil
+}
+
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Install on-a-meet as a system service",
@@ -37,24 +58,7 @@ var installCmd = &cobra.Command{
 			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet install")
 		}
 
-		svc, err := service.New(&noopProgram{}, serviceConfig())
-		if err != nil {
-			return fmt.Errorf("service init failed: %w", err)
-		}
-
-		output.Info.Println("Installing service...")
-		if err := svc.Install(); err != nil {
-			return fmt.Errorf("service install failed: %w", err)
-		}
-		output.Success.Println("Service unit created")
-
-		output.Info.Println("Starting service...")
-		if err := svc.Start(); err != nil {
-			return fmt.Errorf("service start failed: %w", err)
-		}
-		output.Success.Println("Service started")
-
-		return nil
+		return installService()
 	},
 }
 

@@ -93,6 +93,7 @@
 | 010 | Expand env vars in commands and fix viper defaults | 2026-05-29 | `f7fdbe9` | `quick/010-shell-env-expand-viper-defaults/` |
 | 011 | Fix camera selection UX (all default, select-all toggle) | 2026-05-29 | `57ed001` | `quick/011-camera-selection-default-all/` |
 | 012 | Fix config loading from onboard | 2026-05-29 | `60dbd9d` | `quick/012-fix-config-loading/` |
+| 013 | Improve onboard detection test UX | 2026-05-29 | `c747722` | `quick/013-improve-onboard-detection-test-ux/` |
 
 ## Next
 - Milestone v1 complete — all 6 phases done

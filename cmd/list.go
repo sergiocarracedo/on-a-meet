@@ -56,6 +56,6 @@ and current on/off status for each camera.`,
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-	listCmd.Flags().StringVarP(&listMethod, "detect", "d", "", "detection method (v4l2, lsof)")
+	listCmd.Flags().StringVarP(&listMethod, "detect", "d", "v4l2", "detection method (v4l2, lsof)")
 	viper.BindPFlag("detect-method", listCmd.Flags().Lookup("detect"))
 }

@@ -139,7 +139,7 @@ func init() {
 	detectCmd.Flags().StringVarP(&detectOnCmd, "on", "", "", "command to run when camera turns on")
 	detectCmd.Flags().StringVarP(&detectOffCmd, "off", "", "", "command to run when camera turns off")
 	detectCmd.Flags().StringVarP(&detectTimeout, "timeout", "t", "30s", "command execution timeout (0 for no timeout)")
-	detectCmd.Flags().StringVarP(&detectMethod, "detect", "d", "", "detection method (v4l2, lsof)")
+	detectCmd.Flags().StringVarP(&detectMethod, "detect", "d", "v4l2", "detection method (v4l2, lsof)")
 
 	viper.BindPFlag("camera", detectCmd.Flags().Lookup("camera"))
 	viper.BindPFlag("interval", detectCmd.Flags().Lookup("interval"))

@@ -108,9 +108,18 @@
 | 025 | Support export KEY=VALUE in env files | 2026-05-29 | `9f7c928` | `quick/025-env-file-parsing/` |
 
 ## Next
-- Milestone v1 complete — all 6 phases done
-- Last activity: 2026-05-29 - Completed quick task 025: Support export KEY=VALUE in env files
+- Milestone v1.0.0 complete — shipped
+- Last activity: 2026-05-29 - Tagged v1.0.0
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install
 - 2026-05-29: Phase 7 added: Release Automation & Publishing
+
+## Milestone History
+
+### v1.0.0 — Initial Release
+Completed: 2026-05-29
+Phases: 7 (Scaffold, Detection Engine, Command Execution, Service Install, lsof Backend, Onboard Wizard, Release Automation)
+Requirements delivered: REQ-001 through REQ-013
+Quick tasks: 025
+Key achievements: First public release. V4L2 + lsof camera detection, polling engine with debounce and hotplug, command execution with template variables and timeout, service installation, interactive onboard wizard, cross-platform GoReleaser builds, npm wrapper package.

@@ -62,6 +62,7 @@ Uses V4L2 by default (lsof also available) to check /dev/video* device status.`,
 		for _, d := range devices {
 			output.Info.Printfln("  %s — %s (driver: %s)", d.Path, d.Card, d.Driver)
 		}
+		output.Info.Printfln("Config: method=%s interval=%s debounce=%d timeout=%s", cfg.DetectMethod, cfg.Interval, cfg.Debounce, cfg.Timeout)
 
 		timeout, err := time.ParseDuration(cfg.Timeout)
 		if err != nil {

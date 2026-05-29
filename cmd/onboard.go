@@ -117,8 +117,7 @@ Use --dry-run to preview the config before installing.`,
 			output.Info.Printfln("  %s — %s (driver: %s)", d.Path, d.Card, d.Driver)
 		}
 
-		deviceOpts := make([]huh.Option[string], 0, len(devices)+1)
-		deviceOpts = append(deviceOpts, huh.NewOption("All cameras", "__all__"))
+		deviceOpts := make([]huh.Option[string], 0, len(devices))
 		for _, d := range devices {
 			deviceOpts = append(deviceOpts, huh.NewOption(d.Path, d.Path))
 		}
@@ -127,15 +126,26 @@ Use --dry-run to preview the config before installing.`,
 		var method string
 		var debounceStr string
 		var intervalStr string
+		var cameraChoice string
 
 		form := huh.NewForm(
+			huh.NewGroup(
+				huh.NewSelect[string]().
+					Title("Camera selection").
+					Description("Choose whether to monitor all cameras or select specific ones").
+					Options(
+						huh.NewOption("Monitor all cameras", "all"),
+						huh.NewOption("Choose specific cameras", "select"),
+					).
+					Value(&cameraChoice),
+			),
 			huh.NewGroup(
 				huh.NewMultiSelect[string]().
 					Title("Cameras to monitor").
 					Description("Select which cameras to monitor (Space to toggle)").
 					Options(deviceOpts...).
 					Value(&camSelections),
-			),
+			).WithHideFunc(func() bool { return cameraChoice == "all" }),
 			huh.NewGroup(
 				huh.NewNote().Title("Detection methods").
 					Description("V4L2: Direct kernel syscall (Linux-only, faster, no extra deps)\nLSOF: Uses 'lsof' command (cross-platform, requires lsof installed)"),
@@ -185,21 +195,18 @@ Use --dry-run to preview the config before installing.`,
 			return fmt.Errorf("form cancelled: %w", err)
 		}
 
-		if len(camSelections) == 0 {
-			output.Warning.Println("No cameras selected. Exiting.")
-			os.Exit(1)
-		}
-
-		cameras := camSelections
-		for i, c := range cameras {
-			if c == "__all__" {
-				cameras = make([]string, 0, len(devices))
-				for _, d := range devices {
-					cameras = append(cameras, d.Path)
-				}
-				_ = i
-				break
+		var cameras []string
+		if cameraChoice == "all" {
+			cameras = make([]string, len(devices))
+			for i, d := range devices {
+				cameras[i] = d.Path
 			}
+		} else {
+			if len(camSelections) == 0 {
+				output.Warning.Println("No cameras selected. Exiting.")
+				os.Exit(1)
+			}
+			cameras = camSelections
 		}
 
 		debounce := 2

@@ -25,6 +25,13 @@
 **Research:** Completed — `03-RESEARCH.md` (exec.CommandContext, template, process group management)
 **Verification:** Passed — 22/22 tests passing, all must-haves met
 
+## Phase 4: Service Installation
+
+**Status:** 🔄 Discussing (2026-05-28)
+**Last action:** discuss-phase 4 (2026-05-28)
+**Context file:** `.planning/phases/04-service-installation/04-CONTEXT.md`
+**Decisions:** 5 areas discussed — integration pattern, service arguments, lifecycle, binary path, sudo handling
+
 ## Sessions
 
 | Date | Workflow | Result |
@@ -39,6 +46,7 @@
 | 2026-05-28 | discuss-phase 3 | 6 gray areas discussed, decisions captured |
 | 2026-05-28 | plan-phase 3 | 2 plans created across 2 waves, research + verification passed |
 | 2026-05-28 | execute-phase 3 | Phase 3 implemented and verified — 22 tests passing |
+| 2026-05-28 | discuss-phase 4 | 5 gray areas discussed, decisions captured |
 
 ## Next
-- `discuss-phase 4` — Discuss phase 4 (Service Installation)
+- `plan-phase 4` — Plan phase 4 (Service Installation)

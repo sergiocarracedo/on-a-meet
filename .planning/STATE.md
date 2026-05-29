@@ -63,5 +63,11 @@
 **Plans:** 2 plans, 2 waves — all executed
 **Verification:** Passed — build passes, 27 tests passing
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 001 | Fix --detect flag defaulting to empty string | 2026-05-29 | `4b83107` | `quick/001-detect-flag-default/` |
+
 ## Next
 - Milestone complete — v1 ready for review

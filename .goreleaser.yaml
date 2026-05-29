@@ -29,6 +29,23 @@ checksum:
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 
+brews:
+  - name: on-a-meet
+    repository:
+      owner: sergiocarracedo
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    commit_author:
+      name: goreleaser
+      email: goreleaser@localhost
+    homepage: "https://github.com/sergiocarracedo/on-a-meet"
+    description: "CLI tool to detect camera on/off state and trigger commands"
+    license: "MIT"
+    skip_upload: auto
+    install: |
+      bin.install "on-a-meet"
+
 changelog:
   sort: asc
   filters:

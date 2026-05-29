@@ -45,7 +45,26 @@ Requires Go 1.22+. The binary is placed in `$GOPATH/bin` (or `$HOME/go/bin`).
 
 ### Linux Permissions
 
-Access to `/dev/video*` devices requires the `video` group:
+Access to `/dev/video*` devices is restricted. You have a few options:
+
+#### Option A: Run with sudo (recommended for occasional use)
+
+```bash
+sudo on-a-meet detect
+```
+
+Root can access any device. No setup needed. Best for ad-hoc monitoring.
+
+#### Option B: Install as a system service
+
+```bash
+sudo on-a-meet service install
+```
+
+The service runs as root by default and has full camera access. Best for
+persistent background monitoring.
+
+#### Option C: Add your user to the `video` group (convenient, has trade-offs)
 
 ```bash
 sudo usermod -a -G video $USER
@@ -53,10 +72,11 @@ sudo usermod -a -G video $USER
 newgrp video
 ```
 
-Managing the system service (`on-a-meet service install` etc.) requires
-**separate** root privileges via `sudo` — this is normal for any
-system-level service and does not conflict with the `video` group setup
-above.
+> **Trade-off:** Adding your user to the `video` group grants permanent read/write
+> access to **all** camera devices on the system to every process you run — not
+> just on-a-meet. This is generally safe on a personal machine but may be
+> undesirable in multi-user or security-conscious environments. For those cases,
+> use Option A (sudo) or Option B (service) instead.
 
 ## Configuration
 

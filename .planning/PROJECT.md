@@ -22,7 +22,7 @@ Reliably detect camera state changes and fire the correct command every time. Wh
 - Permission check at startup with clear error and fix instructions. REQ-011.
 - Graceful camera hotplug — ENOENT handled per-device, periodic re-scan, log add/remove. REQ-012.
 - Interactive onboard wizard (huh) — camera selection, method select with live test, config input, dry-run, auto sudo re-exec. All quick tasks 001-025.
-- Release automation: GoReleaser cross-platform builds, GitHub Actions workflow, npm wrapper package.
+- Release automation: GoReleaser cross-platform builds (linux/darwin + amd64/arm64), GitHub Actions workflow, GitHub Releases with checksums.
 
 ### Active
 

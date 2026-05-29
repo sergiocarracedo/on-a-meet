@@ -41,7 +41,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 
 | Plan | Wave | Depends | Objective | Key Files |
 |------|------|---------|-----------|-----------|
-| 07-01 | 1 | — | GoReleaser, release workflow, npm wrapper, Homebrew docs | `.goreleaser.yaml`, `.github/workflows/release.yml`, `packages/npm/` |
+| 07-01 | 1 | — | GoReleaser cross-platform builds + GitHub Release on tag push | `.goreleaser.yaml`, `.github/workflows/release.yml` |
 
 ## Phase 6 ✅ Complete
 

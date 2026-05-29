@@ -4,19 +4,24 @@ CLI tool that detects camera on/off state and triggers user-defined commands.
 
 ## Installation
 
+### Binary (Linux / macOS)
+
+Download the latest binary for your platform from the
+[releases page](https://github.com/sergiocarracedo/on-a-meet/releases),
+then make it executable:
+
 ```bash
-# Download the latest release from GitHub
-# or build from source:
-go install github.com/sergiocarracedo/on-a-meet@latest
+chmod +x on-a-meet
+sudo mv on-a-meet /usr/local/bin/
 ```
 
 ### From source
 
 ```bash
-git clone https://github.com/sergiocarracedo/on-a-meet
-cd on-a-meet
-go build -o on-a-meet .
+go install github.com/sergiocarracedo/on-a-meet@latest
 ```
+
+Requires Go 1.22+. The binary is placed in `$GOPATH/bin` (or `$HOME/go/bin`).
 
 ### Permissions
 
@@ -27,6 +32,11 @@ sudo usermod -a -G video $USER
 # Log out and back in, or run:
 newgrp video
 ```
+
+Managing the system service (`on-a-meet service install` etc.) requires
+**separate** root privileges via `sudo` — this is normal for any
+system-level service and does not conflict with the `video` group setup
+above.
 
 ## Configuration
 
@@ -97,3 +107,10 @@ sudo on-a-meet service uninstall
 ```
 
 The service uses `/etc/on-a-meet/config.yaml` for configuration.
+
+### Interactive setup
+
+```bash
+on-a-meet onboard           # Full wizard
+on-a-meet onboard --dry-run # Preview config only
+```

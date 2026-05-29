@@ -122,4 +122,4 @@ Completed: 2026-05-29
 Phases: 7 (Scaffold, Detection Engine, Command Execution, Service Install, lsof Backend, Onboard Wizard, Release Automation)
 Requirements delivered: REQ-001 through REQ-013
 Quick tasks: 025
-Key achievements: First public release. V4L2 + lsof camera detection, polling engine with debounce and hotplug, command execution with template variables and timeout, service installation, interactive onboard wizard, cross-platform GoReleaser builds, npm wrapper package.
+Key achievements: First public release. V4L2 + lsof camera detection, polling engine with debounce and hotplug, command execution with template variables and timeout, service installation, interactive onboard wizard, cross-platform GoReleaser builds with GitHub Releases.

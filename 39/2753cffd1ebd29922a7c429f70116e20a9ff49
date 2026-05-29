@@ -1,0 +1,25 @@
+internal/detector/lsof_stub.go
+  s_57c2e42c824788::t_e7e645eac49b2a 1-19
+internal/detector/detector.go
+  s_57c2e42c824788::t_05a145b0056d9f 1-14
+internal/detector/detector_test.go
+  s_57c2e42c824788::t_21436577472475 1-48
+internal/detector/lsof_linux.go
+  s_57c2e42c824788::t_adb7f82e55ea8d 1-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "392753cffd1ebd29922a7c429f70116e20a9ff49",
+  "prompts": {},
+  "sessions": {
+    "s_57c2e42c824788": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_191c58891ffeV4zFI4TtljUMfe",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>"
+    }
+  }
+}

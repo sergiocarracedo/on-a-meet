@@ -54,6 +54,7 @@
 | | 2026-05-29 | execute-phase 5 | Phase 5 implemented and verified — 27 tests passing, goreleaser + README |
 | | 2026-05-29 | add-phase | Phase 6 added: Onboard Command — Assisted Install |
 | | 2026-05-29 | discuss-phase 6 | 4 gray areas discussed: huh lib, --dry-run flag, sudo re-exec, simple detect test |
+| | 2026-05-29 | plan-phase 6 | 2 plans, 2 waves — huh wizard (wave 1), sudo apply+install (wave 2) |
 
 ## Phase 5: lsof Backend & Polish
 

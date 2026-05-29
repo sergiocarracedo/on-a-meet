@@ -3,8 +3,8 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 5 — lsof Backend & Polish ✅ complete
-**Status:** complete
+**Phase:** 6 — Onboard Command — Assisted Install
+**Status:** planning
 **Last updated:** 2026-05-29
 
 ## Project Summary

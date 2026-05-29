@@ -22,6 +22,8 @@ type onboardConfig struct {
 	Method   string   `json:"method"`
 	Debounce int      `json:"debounce"`
 	Interval string   `json:"interval"`
+	OnCmd    string   `json:"on-cmd,omitempty"`
+	OffCmd   string   `json:"off-cmd,omitempty"`
 }
 
 type writeConfig struct {
@@ -29,6 +31,8 @@ type writeConfig struct {
 	Interval     string `yaml:"interval"`
 	DetectMethod string `yaml:"detect-method"`
 	Debounce     int    `yaml:"debounce"`
+	OnCmd        string `yaml:"on-command,omitempty"`
+	OffCmd       string `yaml:"off-command,omitempty"`
 }
 
 var (
@@ -71,6 +75,8 @@ Use --dry-run to preview the config before installing.`,
 				Interval:     cfg.Interval,
 				DetectMethod: cfg.Method,
 				Debounce:     cfg.Debounce,
+				OnCmd:        cfg.OnCmd,
+				OffCmd:       cfg.OffCmd,
 			}
 
 			yamlData, err := yaml.Marshal(&wc)
@@ -140,6 +146,8 @@ Use --dry-run to preview the config before installing.`,
 		var debounceStr string
 		var intervalStr string
 		var cameraChoice string
+		var onCmdStr string
+		var offCmdStr string
 
 		form := huh.NewForm(
 			huh.NewGroup(
@@ -190,6 +198,18 @@ Use --dry-run to preview the config before installing.`,
 						return err
 					}).
 					Value(&intervalStr),
+			),
+			huh.NewGroup(
+				huh.NewInput().
+					Title("ON command").
+					Description("Command to run when camera turns ON (optional; supports {{.State}}, {{.Device}}, {{.CameraID}})").
+					Placeholder("e.g., echo 'Camera ON'").
+					Value(&onCmdStr),
+				huh.NewInput().
+					Title("OFF command").
+					Description("Command to run when camera turns OFF (optional)").
+					Placeholder("e.g., echo 'Camera OFF'").
+					Value(&offCmdStr),
 			),
 		)
 
@@ -346,6 +366,8 @@ Use --dry-run to preview the config before installing.`,
 			Method:   method,
 			Debounce: debounce,
 			Interval: interval,
+			OnCmd:    onCmdStr,
+			OffCmd:   offCmdStr,
 		}
 
 		if onboardDryRun {
@@ -353,6 +375,12 @@ Use --dry-run to preview the config before installing.`,
 			fmt.Printf("detect-method: %s\n", cfg.Method)
 			fmt.Printf("interval: %s\n", cfg.Interval)
 			fmt.Printf("debounce: %d\n", cfg.Debounce)
+			if cfg.OnCmd != "" {
+				fmt.Printf("on-command: %s\n", cfg.OnCmd)
+			}
+			if cfg.OffCmd != "" {
+				fmt.Printf("off-command: %s\n", cfg.OffCmd)
+			}
 			if len(cfg.Cameras) == 1 {
 				fmt.Printf("camera: %s\n", cfg.Cameras[0])
 			} else {

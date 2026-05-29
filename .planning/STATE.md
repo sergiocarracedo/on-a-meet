@@ -96,9 +96,12 @@
 | 013 | Improve onboard detection test UX | 2026-05-29 | `c747722` | `quick/013-improve-onboard-detection-test-ux/` |
 | 014 | Make detection test optional, show method change only after failure | 2026-05-29 | `895949c` | `quick/014-onboard-detection-test-optional/` |
 | 015 | Stop service before reinstall, prompt before config overwrite | 2026-05-29 | `ee1987b` | `quick/015-onboard-stop-service-overwrite-config/` |
+| 016 | Add on/off command inputs to onboard wizard | 2026-05-29 | `895163d` | `quick/016-onboard-on-off-commands/` |
+| 017 | Fix YAML on/off command quoting in onboard --apply | 2026-05-29 | `19eb82d` | `quick/017-yaml-on-off-command-quoting/` |
 
 ## Next
 - Milestone v1 complete — all 6 phases done
+- Last activity: 2026-05-29 - Completed quick task 017: YAML on/off command quoting in onboard --apply
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install

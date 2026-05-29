@@ -27,26 +27,26 @@
 
 ## Phase 4: Service Installation
 
-**Status:** 🔄 Discussing (2026-05-28)
-**Last action:** discuss-phase 4 (2026-05-28)
+**Status:** 🔄 Planning (2026-05-28)
+**Last action:** plan-phase 4 (2026-05-28)
 **Context file:** `.planning/phases/04-service-installation/04-CONTEXT.md`
 **Decisions:** 5 areas discussed — integration pattern, service arguments, lifecycle, binary path, sudo handling
-
-## Sessions
-
-| Date | Workflow | Result |
-|------|----------|--------|
-| 2026-05-28 | new-project | Milestone v1 initialized, 5-phase roadmap, 12 requirements |
-| 2026-05-28 | discuss-phase 1 | 4 gray areas discussed, decisions captured |
-| 2026-05-28 | plan-phase 1 | 2 plans created across 2 waves |
-| 2026-05-28 | execute-phase 1 | Phase 1 implemented and verified |
-| 2026-05-28 | discuss-phase 2 | 4 gray areas discussed, decisions captured |
-| 2026-05-28 | plan-phase 2 | 2 plans created across 2 waves, research + verification passed |
-| 2026-05-28 | execute-phase 2 | Phase 2 implemented and verified — 8 tests passing |
-| 2026-05-28 | discuss-phase 3 | 6 gray areas discussed, decisions captured |
-| 2026-05-28 | plan-phase 3 | 2 plans created across 2 waves, research + verification passed |
-| 2026-05-28 | execute-phase 3 | Phase 3 implemented and verified — 22 tests passing |
-| 2026-05-28 | discuss-phase 4 | 5 gray areas discussed, decisions captured |
+**Research:** Completed — `04-RESEARCH.md` (kardianos/service one-shot API, sudo check, binary path)
+**Plans:** 2 plans across 2 waves
+| | Date | Workflow | Result |
+| |------|----------|--------|
+| | 2026-05-28 | new-project | Milestone v1 initialized, 5-phase roadmap, 12 requirements |
+| | 2026-05-28 | discuss-phase 1 | 4 gray areas discussed, decisions captured |
+| | 2026-05-28 | plan-phase 1 | 2 plans created across 2 waves |
+| | 2026-05-28 | execute-phase 1 | Phase 1 implemented and verified |
+| | 2026-05-28 | discuss-phase 2 | 4 gray areas discussed, decisions captured |
+| | 2026-05-28 | plan-phase 2 | 2 plans created across 2 waves, research + verification passed |
+| | 2026-05-28 | execute-phase 2 | Phase 2 implemented and verified — 8 tests passing |
+| | 2026-05-28 | discuss-phase 3 | 6 gray areas discussed, decisions captured |
+| | 2026-05-28 | plan-phase 3 | 2 plans created across 2 waves, research + verification passed |
+| | 2026-05-28 | execute-phase 3 | Phase 3 implemented and verified — 22 tests passing |
+| | 2026-05-28 | discuss-phase 4 | 5 gray areas discussed, decisions captured |
+| | 2026-05-28 | plan-phase 4 | 2 plans created across 2 waves, research + verification passed |
 
 ## Next
-- `plan-phase 4` — Plan phase 4 (Service Installation)
+- `execute-phase 4` — Execute phase 4 (Service Installation)

@@ -3,8 +3,8 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 3 — Command Execution & Templates ✅ complete → Phase 4 — Service Installation
-**Status:** verifying
+**Phase:** 4 — Service Installation
+**Status:** planning
 **Last updated:** 2026-05-28
 
 ## Project Summary
@@ -34,6 +34,13 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/research/` — Stack, Features, Architecture, Pitfalls, Summary
 - `.planning/STATE.md` — Project state and session tracking
 - `.planning/phases/01-project-scaffold-cli-foundation/` — Phase 1 context, plans, summaries
+
+## Phase 4 — Planning
+
+| Plan | Wave | Depends | Objective | Key Files |
+|------|------|---------|-----------|-----------|
+| 04-01 | 1 | — | Install command: sudo check, Install()+Start() via kardianos/service | `cmd/install.go` |
+| 04-02 | 2 | 04-01 | Uninstall command: sudo check, Stop()+Uninstall() | `cmd/uninstall.go` |
 
 ## Phase 3 ✅ Complete
 

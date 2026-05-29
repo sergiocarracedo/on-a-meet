@@ -2,9 +2,9 @@
 
 ## Current Phase
 
-**Milestone:** v1 — Initial release
-**Phase:** 6 — Onboard Command — Assisted Install
-**Status:** ✅ complete
+**Milestone:** v1.0.0 — Initial Release ✓ shipped
+**Phase:** —
+**Status:** milestone complete — ready for next milestone
 **Last updated:** 2026-05-29
 
 ## Project Summary
@@ -30,11 +30,18 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 ## Key Files
 
 - `.planning/PROJECT.md` — Project scope and context
-- `.planning/REQUIREMENTS.md` — REQ-001 through REQ-017
-- `.planning/ROADMAP.md` — 6 phases
+- `.planning/REQUIREMENTS.md` — archived in `.planning/milestones/v1.0.0-REQUIREMENTS.md`
+- `.planning/ROADMAP.md` — archived in `.planning/milestones/v1.0.0-ROADMAP.md`
+- `.planning/milestones/` — Archived milestone artifacts
 - `.planning/research/` — Stack, Features, Architecture, Pitfalls, Summary
 - `.planning/STATE.md` — Project state and session tracking
-- `.planning/phases/06-onboard-command-assisted-install/` — Phase 6 context, plans, summaries
+- `.planning/phases/07-release-automation-and-publishing/` — Phase 7 context, plans, summaries
+
+## Phase 7 ✅ Complete
+
+| Plan | Wave | Depends | Objective | Key Files |
+|------|------|---------|-----------|-----------|
+| 07-01 | 1 | — | GoReleaser, release workflow, npm wrapper, Homebrew docs | `.goreleaser.yaml`, `.github/workflows/release.yml`, `packages/npm/` |
 
 ## Phase 6 ✅ Complete
 
@@ -58,6 +65,11 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 | 04-02 | 2 | 04-01 | Uninstall command: sudo check, Stop()+Uninstall() | `cmd/uninstall.go` |
 
 ## Phase 3 ✅ Complete
+
+| Plan | Wave | Objective | Key Files |
+|------|------|-----------|-----------|
+| 03-01 | 1 | Executor package + config + tests | `internal/executor/executor.go`, `internal/config/config.go` |
+| 03-02 | 2 | Wire executor into detect command | `cmd/detect.go`, `config.yaml.example` |
 
 | Plan | Wave | Objective | Key Files |
 |------|------|-----------|-----------|

@@ -62,6 +62,14 @@ func initConfig() {
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("ON_A_MEET")
 
+	viper.SetDefault("detect-method", "v4l2")
+	viper.SetDefault("interval", "1s")
+	viper.SetDefault("debounce", 3)
+	viper.SetDefault("timeout", "30s")
+	viper.SetDefault("camera", "")
+	viper.SetDefault("on-command", "")
+	viper.SetDefault("off-command", "")
+
 	output.Init(cfgSilent, cfgVerbose)
 
 	if err := viper.ReadInConfig(); err == nil {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"os"
 	"os/exec"
 	"sync"
 	"syscall"
@@ -64,6 +65,7 @@ func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, s
 		return fmt.Errorf("template execute error: %w", err)
 	}
 	rendered := buf.String()
+	rendered = os.ExpandEnv(rendered)
 
 	cmd := exec.CommandContext(cmdCtx, "sh", "-c", rendered)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}

@@ -50,5 +50,12 @@
 | | 2026-05-28 | plan-phase 4 | 2 plans created across 2 waves, research + verification passed |
 | | 2026-05-29 | execute-phase 4 | Phase 4 implemented and verified — build passes, all tests passing |
 
+## Phase 5: lsof Backend & Polish
+
+**Status:** 🔄 Discussing (2026-05-29)
+**Last action:** discuss-phase 5 (2026-05-29)
+**Context file:** `.planning/phases/05-lsof-backend-polish/05-CONTEXT.md`
+**Decisions:** 5 areas discussed — lsof detection, backend factory, list command, goreleaser, README
+
 ## Next
-- `discuss-phase 5` — Discuss Phase 5 (lsof Backend & Polish)
+- `plan-phase 5` — Plan Phase 5 (lsof Backend & Polish)

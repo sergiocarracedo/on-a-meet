@@ -41,6 +41,8 @@ func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, s
 		return nil
 	}
 
+	output.Info.Printfln("%s-command executing", state)
+
 	cmdCtx := ctx
 	var cancel context.CancelFunc
 	if e.timeout > 0 {

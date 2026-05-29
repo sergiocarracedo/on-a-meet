@@ -8,6 +8,7 @@ type Config struct {
 	DetectMethod string `mapstructure:"detect-method"`
 	Debounce     int    `mapstructure:"debounce"`
 	Timeout      string `mapstructure:"timeout"`
+	Verbose      bool   `mapstructure:"verbose"`
 }
 
 func Defaults() Config {

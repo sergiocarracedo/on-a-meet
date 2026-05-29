@@ -85,10 +85,15 @@ on-a-meet list --detect lsof
 
 ```bash
 # Install as system service (requires sudo)
-sudo on-a-meet install
+sudo on-a-meet service install
 
-# Uninstall
-sudo on-a-meet uninstall
+# Start / Stop / Restart (requires sudo)
+sudo on-a-meet service start
+sudo on-a-meet service stop
+sudo on-a-meet service restart
+
+# Uninstall (requires sudo)
+sudo on-a-meet service uninstall
 ```
 
 The service uses `/etc/on-a-meet/config.yaml` for configuration.

@@ -110,6 +110,9 @@ go build -o on-a-meet .
 ./on-a-meet detect --interval 500ms
 ./on-a-meet detect --on "echo {{.State}}" --off "echo {{.State}}"
 ./on-a-meet list
-./on-a-meet install
-./on-a-meet uninstall
+./on-a-meet service install     # Requires sudo
+./on-a-meet service uninstall   # Requires sudo
+./on-a-meet service start       # Requires sudo
+./on-a-meet service stop        # Requires sudo
+./on-a-meet service restart     # Requires sudo
 ```

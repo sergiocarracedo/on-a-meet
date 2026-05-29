@@ -64,7 +64,7 @@ var installCmd = &cobra.Command{
 	Long:  `Creates and enables a systemd (Linux) or launchd (macOS) service unit.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if os.Geteuid() != 0 {
-			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet install")
+			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet service install")
 		}
 
 		return installService()
@@ -72,5 +72,5 @@ var installCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(installCmd)
+	serviceCmd.AddCommand(installCmd)
 }

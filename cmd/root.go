@@ -73,9 +73,9 @@ func initConfig() {
 	viper.SetDefault("silent", false)
 	viper.SetDefault("verbose", false)
 
-	output.Init(cfgSilent, cfgVerbose)
-
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
+
+	output.Init(viper.GetBool("silent"), viper.GetBool("verbose"))
 }

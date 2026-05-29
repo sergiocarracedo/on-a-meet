@@ -16,7 +16,7 @@ var restartCmd = &cobra.Command{
 	Long:  `Stops and starts the systemd (Linux) or launchd (macOS) service unit to pick up config changes.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if os.Geteuid() != 0 {
-			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet restart")
+			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet service restart")
 		}
 
 		svc, err := service.New(&noopProgram{}, serviceConfig(""))
@@ -41,5 +41,5 @@ var restartCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(restartCmd)
+	serviceCmd.AddCommand(restartCmd)
 }

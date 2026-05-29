@@ -16,7 +16,7 @@ var uninstallCmd = &cobra.Command{
 	Long:  `Stops and removes the systemd (Linux) or launchd (macOS) service unit.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if os.Geteuid() != 0 {
-			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet uninstall")
+			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet service uninstall")
 		}
 
 		svc, err := service.New(&noopProgram{}, serviceConfig(""))
@@ -42,5 +42,5 @@ var uninstallCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(uninstallCmd)
+	serviceCmd.AddCommand(uninstallCmd)
 }

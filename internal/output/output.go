@@ -11,6 +11,7 @@ var (
 	Success = pterm.Success
 	Warning = pterm.Warning
 	Error   = pterm.Error
+	Debug   = pterm.Debug
 )
 
 func Init(silent, verbose bool) {

@@ -9,6 +9,8 @@ import (
 	"syscall"
 	"text/template"
 	"time"
+
+	"github.com/sergiocarracedo/on-a-meet/internal/output"
 )
 
 type TemplateData struct {
@@ -77,14 +79,26 @@ func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, s
 	cmd.Stderr = &outBuf
 
 	err = cmd.Run()
-	output := outBuf.String()
+	outStr := outBuf.String()
+
+	exitCode := -1
+	if cmd.ProcessState != nil {
+		exitCode = cmd.ProcessState.ExitCode()
+	}
+
+	output.Debug.Printfln("%s-command: %s", state, rendered)
+	output.Debug.Printfln("%s-command output: %s", state, outStr)
 
 	if err != nil {
 		if cmdCtx.Err() != nil {
-			return fmt.Errorf("command timed out after %v: %s", e.timeout, output)
+			output.Info.Printfln("%s-command exited with code %d", state, exitCode)
+			return fmt.Errorf("command timed out after %v: %s", e.timeout, outStr)
 		}
-		return fmt.Errorf("command failed (exit code %d): %s", cmd.ProcessState.ExitCode(), output)
+		output.Info.Printfln("%s-command exited with code %d", state, exitCode)
+		return fmt.Errorf("command failed (exit code %d): %s", exitCode, outStr)
 	}
+
+	output.Info.Printfln("%s-command exited with code %d", state, exitCode)
 
 	return nil
 }

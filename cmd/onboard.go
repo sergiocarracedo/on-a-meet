@@ -28,13 +28,24 @@ func (s yamlQuotedString) MarshalYAML() (interface{}, error) {
 	}, nil
 }
 
+type cameraList []string
+
+func (c *cameraList) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err == nil {
+		*c = []string{s}
+		return nil
+	}
+	return json.Unmarshal(data, (*[]string)(c))
+}
+
 type onboardConfig struct {
-	Cameras  []string `json:"cameras"`
-	Method   string   `json:"method"`
-	Debounce int      `json:"debounce"`
-	Interval string   `json:"interval"`
-	OnCmd    string   `json:"on-cmd"`
-	OffCmd   string   `json:"off-cmd"`
+	Cameras  cameraList `json:"cameras"`
+	Method   string     `json:"method"`
+	Debounce int        `json:"debounce"`
+	Interval string     `json:"interval"`
+	OnCmd    string     `json:"on-cmd"`
+	OffCmd   string     `json:"off-cmd"`
 }
 
 type writeConfig struct {
@@ -79,7 +90,7 @@ Use --dry-run to preview the config before installing.`,
 			}
 
 			camera := ""
-			if len(cfg.Cameras) == 1 {
+			if len(cfg.Cameras) == 1 && cfg.Cameras[0] != "all" {
 				camera = cfg.Cameras[0]
 			}
 
@@ -161,13 +172,10 @@ Use --dry-run to preview the config before installing.`,
 				if cfg.OffCmd != "" {
 					fmt.Printf("off-command: %s\n", cfg.OffCmd)
 				}
-				if len(cfg.Cameras) == 1 {
+				if len(cfg.Cameras) == 1 && cfg.Cameras[0] != "all" {
 					fmt.Printf("camera: %s\n", cfg.Cameras[0])
 				} else {
-					fmt.Println("cameras:")
-					for _, cam := range cfg.Cameras {
-						fmt.Printf("  - %s\n", cam)
-					}
+					fmt.Println("cameras: all")
 				}
 				fmt.Println("\nRun without --dry-run to write config and install the service.")
 				return nil
@@ -457,7 +465,7 @@ Use --dry-run to preview the config before installing.`,
 		}
 
 		cfg := onboardConfig{
-			Cameras:  cameras,
+			Cameras:  cameraList(cameras),
 			Method:   method,
 			Debounce: debounce,
 			Interval: interval,

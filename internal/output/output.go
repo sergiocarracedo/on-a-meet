@@ -2,9 +2,12 @@ package output
 
 import (
 	"io"
+	"regexp"
 
 	"github.com/pterm/pterm"
 )
+
+var jwtRe = regexp.MustCompile(`ey[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}`)
 
 var (
 	Info    = pterm.Info
@@ -36,4 +39,8 @@ func Banner(deviceCount int) {
 	} else {
 		pterm.Warning.Println("No camera devices detected")
 	}
+}
+
+func RedactSecrets(s string) string {
+	return jwtRe.ReplaceAllString(s, "ey***.***.***")
 }

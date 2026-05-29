@@ -88,8 +88,8 @@ func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, s
 		exitCode = cmd.ProcessState.ExitCode()
 	}
 
-	output.Debug.Printfln("%s-command: %s", state, rendered)
-	output.Debug.Printfln("%s-command output: %s", state, outStr)
+	output.Debug.Printfln("%s-command: %s", state, output.RedactSecrets(rendered))
+	output.Debug.Printfln("%s-command output: %s", state, output.RedactSecrets(outStr))
 
 	if err != nil {
 		if cmdCtx.Err() != nil {

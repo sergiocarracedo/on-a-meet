@@ -101,10 +101,12 @@
 | 018 | Add --config flag to onboard for JSON config input | 2026-05-29 | `762a831` | `quick/018-json-config-flag/` |
 | 019 | Accept "all" string for cameras in --config JSON | 2026-05-29 | `0808bce` | `quick/019-cameras-all-string/` |
 | 020 | Service runs commands as original user | 2026-05-29 | `789003b` | `quick/020-service-run-as-original-user/` |
+| 021 | Add restart service command | 2026-05-29 | `9af4f39` | `quick/021-restart-service-command/` |
+| 022 | Add service subcommand group + verbose config | 2026-05-29 | `e81f640` | `quick/022-add-service-subcommand-and-verbose/` |
 
 ## Next
 - Milestone v1 complete — all 6 phases done
-- Last activity: 2026-05-29 - Completed quick task 020: Service runs commands as original user
+- Last activity: 2026-05-29 - Completed quick task 022: Add service subcommand group + verbose config
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install

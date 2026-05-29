@@ -17,22 +17,33 @@ import (
 	"github.com/sergiocarracedo/on-a-meet/internal/output"
 )
 
+type yamlQuotedString string
+
+func (s yamlQuotedString) MarshalYAML() (interface{}, error) {
+	return &yaml.Node{
+		Kind:  yaml.ScalarNode,
+		Tag:   "!!str",
+		Value: string(s),
+		Style: yaml.DoubleQuotedStyle,
+	}, nil
+}
+
 type onboardConfig struct {
 	Cameras  []string `json:"cameras"`
 	Method   string   `json:"method"`
 	Debounce int      `json:"debounce"`
 	Interval string   `json:"interval"`
-	OnCmd    string   `json:"on-cmd,omitempty"`
-	OffCmd   string   `json:"off-cmd,omitempty"`
+	OnCmd    string   `json:"on-cmd"`
+	OffCmd   string   `json:"off-cmd"`
 }
 
 type writeConfig struct {
-	Camera       string `yaml:"camera,omitempty"`
-	Interval     string `yaml:"interval"`
-	DetectMethod string `yaml:"detect-method"`
-	Debounce     int    `yaml:"debounce"`
-	OnCmd        string `yaml:"on-command,omitempty"`
-	OffCmd       string `yaml:"off-command,omitempty"`
+	Camera       string           `yaml:"camera,omitempty"`
+	Interval     string           `yaml:"interval"`
+	DetectMethod string           `yaml:"detect-method"`
+	Debounce     int              `yaml:"debounce"`
+	OnCmd        yamlQuotedString `yaml:"on-command"`
+	OffCmd       yamlQuotedString `yaml:"off-command"`
 }
 
 var (
@@ -75,8 +86,8 @@ Use --dry-run to preview the config before installing.`,
 				Interval:     cfg.Interval,
 				DetectMethod: cfg.Method,
 				Debounce:     cfg.Debounce,
-				OnCmd:        cfg.OnCmd,
-				OffCmd:       cfg.OffCmd,
+				OnCmd:        yamlQuotedString(cfg.OnCmd),
+				OffCmd:       yamlQuotedString(cfg.OffCmd),
 			}
 
 			yamlData, err := yaml.Marshal(&wc)

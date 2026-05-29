@@ -2,16 +2,58 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/kardianos/service"
 	"github.com/spf13/cobra"
+
+	"github.com/sergiocarracedo/on-a-meet/internal/output"
 )
+
+type noopProgram struct{}
+
+func (p *noopProgram) Start(s service.Service) error { return nil }
+func (p *noopProgram) Stop(s service.Service) error  { return nil }
+
+func serviceConfig() *service.Config {
+	return &service.Config{
+		Name:        "on-a-meet",
+		DisplayName: "on-a-meet",
+		Description: "Camera state monitoring service",
+		Arguments: []string{
+			"detect",
+			"--config", "/etc/on-a-meet/config.yaml",
+		},
+		WorkingDirectory: "/",
+	}
+}
 
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Install on-a-meet as a system service",
 	Long:  `Creates and enables a systemd (Linux) or launchd (macOS) service unit.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Println("install: not yet implemented (Phase 4)")
+		if os.Geteuid() != 0 {
+			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet install")
+		}
+
+		svc, err := service.New(&noopProgram{}, serviceConfig())
+		if err != nil {
+			return fmt.Errorf("service init failed: %w", err)
+		}
+
+		output.Info.Println("Installing service...")
+		if err := svc.Install(); err != nil {
+			return fmt.Errorf("service install failed: %w", err)
+		}
+		output.Success.Println("Service unit created")
+
+		output.Info.Println("Starting service...")
+		if err := svc.Start(); err != nil {
+			return fmt.Errorf("service start failed: %w", err)
+		}
+		output.Success.Println("Service started")
+
 		return nil
 	},
 }

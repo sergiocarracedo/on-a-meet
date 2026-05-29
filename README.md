@@ -4,6 +4,14 @@ CLI tool that detects camera on/off state and triggers user-defined commands.
 
 ## Installation
 
+### Quick install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/sergiocarracedo/on-a-meet/main/install.sh | sudo bash
+```
+
+This detects your OS and architecture, downloads the correct binary, and installs it to `/usr/local/bin/`.
+
 ### Binary (Linux)
 
 Download the latest binary for your platform from the
@@ -55,10 +63,10 @@ above.
 Create `~/.config/on-a-meet/config.yaml`:
 
 ```yaml
-interval: "1s"
+interval: '1s'
 debounce: 3
-detect-method: "v4l2"
-timeout: "30s"
+detect-method: 'v4l2'
+timeout: '30s'
 on-command: 'notify-send "Camera" "Camera turned ON"'
 off-command: 'notify-send "Camera" "Camera turned OFF"'
 ```
@@ -90,11 +98,11 @@ on-a-meet detect --detect lsof
 
 Available in `--on` and `--off` commands:
 
-| Variable       | Description          | Example              |
-|----------------|----------------------|----------------------|
-| `{{.CameraID}}` | Short device name   | `video0`             |
-| `{{.Device}}`   | Full device path    | `/dev/video0`        |
-| `{{.State}}`    | Camera state        | `on` or `off`        |
+| Variable        | Description       | Example       |
+| --------------- | ----------------- | ------------- |
+| `{{.CameraID}}` | Short device name | `video0`      |
+| `{{.Device}}`   | Full device path  | `/dev/video0` |
+| `{{.State}}`    | Camera state      | `on` or `off` |
 
 ### List devices
 

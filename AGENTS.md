@@ -3,8 +3,8 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 4 — Service Installation ✅ complete → Phase 5 — lsof Backend & Polish
-**Status:** complete
+**Phase:** 5 — lsof Backend & Polish
+**Status:** planning
 **Last updated:** 2026-05-29
 
 ## Project Summary
@@ -34,6 +34,13 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/research/` — Stack, Features, Architecture, Pitfalls, Summary
 - `.planning/STATE.md` — Project state and session tracking
 - `.planning/phases/01-project-scaffold-cli-foundation/` — Phase 1 context, plans, summaries
+
+## Phase 5 — Planning
+
+| Plan | Wave | Depends | Objective | Key Files |
+|------|------|---------|-----------|-----------|
+| 05-01 | 1 | — | lsof backend + detector.New factory + tests | `internal/detector/lsof_linux.go`, `internal/detector/detector.go` |
+| 05-02 | 2 | 05-01 | Wire factory into detect + list command + goreleaser + README | `cmd/detect.go`, `cmd/list.go`, `.goreleaser.yaml`, `README.md` |
 
 ## Phase 4 ✅ Complete
 

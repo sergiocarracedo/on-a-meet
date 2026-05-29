@@ -82,11 +82,15 @@
 ## Phase 6: Onboard Command — Assisted Install
 
 **Goal:** Interactive `onboard` command that walks users through camera selection, detection method selection with live test, configuration, and automatic service installation.
-**Status:** [ ] Not started
+**Status:** ✅ Complete (2026-05-29)
 **Depends on:** Phase 5
 
 ### Plans
-*Not yet planned — run `plan-phase 6`*
+
+| Plan | Wave | Objective | Status |
+|------|------|-----------|--------|
+| 06-01 | 1 | Interactive onboard wizard — device MultiSelect, method select, live detection test, config input, dry-run mode | ✅ |
+| 06-02 | 2 | Sudo apply path — read JSON, write YAML, install service, auto re-exec with sudo | ✅ |
 
 ## Phase Dependencies
 
@@ -99,4 +103,4 @@ Phase 5 (lsof + Polish) ←─────────────────�
 Phase 5 can run in parallel with Phase 4 or independently after Phase 3.
 
 ---
-*Last updated: 2026-05-28*
+*Last updated: 2026-05-29*

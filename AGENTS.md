@@ -4,7 +4,7 @@
 
 **Milestone:** v1 — Initial release
 **Phase:** 6 — Onboard Command — Assisted Install
-**Status:** planning
+**Status:** ✅ complete
 **Last updated:** 2026-05-29
 
 ## Project Summary
@@ -18,6 +18,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - **Config:** spf13/viper v1.19+ (YAML, CLI flags, env vars)
 - **Output:** pterm/pterm v0.12.83
 - **Service mgmt:** kardianos/service v1.2.4
+- **Interactive UI:** charmbracelet/huh v1.0.0
 
 ## Architecture
 
@@ -30,10 +31,17 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 
 - `.planning/PROJECT.md` — Project scope and context
 - `.planning/REQUIREMENTS.md` — REQ-001 through REQ-017
-- `.planning/ROADMAP.md` — 5 phases
+- `.planning/ROADMAP.md` — 6 phases
 - `.planning/research/` — Stack, Features, Architecture, Pitfalls, Summary
 - `.planning/STATE.md` — Project state and session tracking
-- `.planning/phases/01-project-scaffold-cli-foundation/` — Phase 1 context, plans, summaries
+- `.planning/phases/06-onboard-command-assisted-install/` — Phase 6 context, plans, summaries
+
+## Phase 6 ✅ Complete
+
+| Plan | Wave | Depends | Objective | Key Files |
+|------|------|---------|-----------|-----------|
+| 06-01 | 1 | — | Interactive huh-based wizard — camera MultiSelect, method select+live test, config, dry-run | `cmd/onboard.go` |
+| 06-02 | 2 | 06-01 | Sudo apply path — JSON→YAML, write /etc config, install service, auto sudo re-exec | `cmd/onboard.go`, `cmd/install.go` |
 
 ## Phase 5 ✅ Complete
 
@@ -62,6 +70,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 ├── main.go               # Entry point
 ├── cmd/
 │   ├── root.go           # Root command, Viper config, flags
+│   ├── onboard.go        # Interactive setup wizard (huh)
 │   ├── detect.go         # detect subcommand — V4L2 polling + command execution
 │   ├── list.go           # list subcommand (stub)
 │   ├── install.go        # install subcommand — kardianos/service Install()+Start()
@@ -92,6 +101,10 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 ```bash
 # Build
 go build -o on-a-meet .
+
+# Interactive setup
+./on-a-meet onboard                  # Full wizard
+./on-a-meet onboard --dry-run        # Preview config only
 
 # Run
 ./on-a-meet detect --interval 500ms

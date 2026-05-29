@@ -55,6 +55,7 @@
 | | 2026-05-29 | add-phase | Phase 6 added: Onboard Command — Assisted Install |
 | | 2026-05-29 | discuss-phase 6 | 4 gray areas discussed: huh lib, --dry-run flag, sudo re-exec, simple detect test |
 | | 2026-05-29 | plan-phase 6 | 2 plans, 2 waves — huh wizard (wave 1), sudo apply+install (wave 2) |
+| | 2026-05-29 | execute-phase 6 | Phase 6 implemented — onboard command with wizard + sudo apply path |
 
 ## Phase 5: lsof Backend & Polish
 
@@ -65,6 +66,16 @@
 **Research:** Completed — `05-RESEARCH.md` (lsof exit codes, factory pattern, goreleaser)
 **Plans:** 2 plans, 2 waves — all executed
 **Verification:** Passed — build passes, 27 tests passing
+
+## Phase 6: Onboard Command — Assisted Install
+
+**Status:** ✅ Complete (2026-05-29)
+**Last action:** execute-phase 6 (2026-05-29)
+**Context file:** `.planning/phases/06-onboard-command-assisted-install/06-CONTEXT.md`
+**Decisions:** 4 areas discussed — huh library, --dry-run flag, sudo re-exec, simple detect test
+**Research:** Completed — `06-RESEARCH.md` (huh API: NewForm, NewMultiSelect, NewSelect, NewInput)
+**Plans:** 2 plans, 2 waves — all executed
+**Verification:** Passed — build passes, 19 tests passing
 
 ### Quick Tasks Completed
 
@@ -82,7 +93,7 @@
 | 010 | Expand env vars in commands and fix viper defaults | 2026-05-29 | `f7fdbe9` | `quick/010-shell-env-expand-viper-defaults/` |
 
 ## Next
-- Phase 6 added: Onboard Command — Assisted Install
+- Milestone v1 complete — all 6 phases done
 
 ### Roadmap Evolution
-- Phase 6 added: Onboard Command — Assisted Install
+- 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install

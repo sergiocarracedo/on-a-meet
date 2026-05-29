@@ -3,8 +3,8 @@
 ## Current Phase
 
 **Milestone:** v1.1.0 — macOS Support & Docs Polish
-**Phase:** 1 — macOS Detection Backend (planning)
-**Status:** planning — ready for implementation
+**Phase:** 2 — _(placeholder, no work planned yet)_
+**Status:** Phase 1 complete — ready for next milestone or Phase 2
 **Last updated:** 2026-05-29
 
 ## Project Summary
@@ -38,12 +38,18 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/phases/07-release-automation-and-publishing/` — Phase 7 context, plans, summaries
 - `.planning/phases/08-macos-detection-backend/` — Phase 8 context, plans, summaries
 
-## Phase 1 🚧 In Progress
+## Phase 1 ✅ Complete
 
 | Plan | Wave | Depends | Objective | Key Files |
 |------|------|---------|-----------|-----------|
 | 01-01 | 1 | — | macOSDetector — log stream detection, system_profiler enumeration, factory support | `internal/detector/darwin.go`, `internal/detector/detector.go` |
 | 01-02 | 2 | 01-01 | README docs — onboard command + macOS install/permissions notes | `README.md` |
+
+## Phase 2 🚧 In Progress
+
+| Plan | Wave | Depends | Objective | Key Files |
+|------|------|---------|-----------|-----------|
+| 02-01 | 1 | — | _placeholder_ | — |
 
 ## Phase 7 ✅ Complete
 

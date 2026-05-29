@@ -11,6 +11,7 @@ import (
 
 	"github.com/charmbracelet/huh"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"gopkg.in/yaml.v3"
 
 	"github.com/sergiocarracedo/on-a-meet/internal/detector"
@@ -219,7 +220,9 @@ Use --dry-run to preview the config before installing.`,
 			return nil
 		}
 
-		det, err := detector.New("v4l2")
+		method := viper.GetString("detect-method")
+
+		det, err := detector.New(method)
 		if err != nil {
 			return fmt.Errorf("failed to create detector: %w", err)
 		}
@@ -245,7 +248,6 @@ Use --dry-run to preview the config before installing.`,
 		}
 
 		var camSelections []string
-		var method string
 		var debounceStr string
 		var intervalStr string
 		var cameraChoice string
@@ -347,7 +349,6 @@ Use --dry-run to preview the config before installing.`,
 			interval = "1s"
 		}
 
-		method = "v4l2"
 		var runTest bool
 		huh.NewConfirm().
 			Title("Run detection test?").
@@ -357,7 +358,7 @@ Use --dry-run to preview the config before installing.`,
 			Value(&runTest).Run()
 
 		if runTest {
-			testDet, err := detector.New(method)
+			testDet, err := detector.New(viper.GetString("detect-method"))
 			if err == nil {
 				testFailed := false
 				reader := bufio.NewReader(os.Stdin)
@@ -454,10 +455,11 @@ Use --dry-run to preview the config before installing.`,
 							Options(
 								huh.NewOption("V4L2 (recommended)", "v4l2"),
 								huh.NewOption("lsof", "lsof"),
+								huh.NewOption("darwin (macOS)", "darwin"),
 							).
 							Value(&methodSelect).Run()
 						if methodSelect != "" {
-							method = methodSelect
+							viper.Set("detect-method", methodSelect)
 						}
 					}
 				}
@@ -466,7 +468,7 @@ Use --dry-run to preview the config before installing.`,
 
 		cfg := onboardConfig{
 			Cameras:  cameraList(cameras),
-			Method:   method,
+			Method:   viper.GetString("detect-method"),
 			Debounce: debounce,
 			Interval: interval,
 			OnCmd:    onCmdStr,

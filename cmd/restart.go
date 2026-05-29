@@ -37,7 +37,7 @@ var restartCmd = &cobra.Command{
 		}
 
 		if err := svc.Start(); err != nil {
-			return fmt.Errorf("service start failed: %w", err)
+			return fmt.Errorf("service start failed: %w (try 'sudo on-a-meet service install' first)", err)
 		}
 		output.Success.Println("Service restarted")
 

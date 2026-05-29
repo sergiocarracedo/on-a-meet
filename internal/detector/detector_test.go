@@ -46,3 +46,21 @@ func TestNewLsofImplementsDetector(t *testing.T) {
 	}
 	var _ Detector = d
 }
+
+func TestNewDarwin(t *testing.T) {
+	d, err := New("darwin")
+	if err != nil {
+		t.Fatalf("New('darwin') failed: %v", err)
+	}
+	if d == nil {
+		t.Fatal("New('darwin') returned nil")
+	}
+}
+
+func TestNewDarwinImplementsDetector(t *testing.T) {
+	d, err := New("darwin")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var _ Detector = d
+}

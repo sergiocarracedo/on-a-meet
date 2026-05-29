@@ -106,14 +106,27 @@
 | 023 | Add environment-file config for service unit | 2026-05-29 | `5d58d03` | `quick/023-envvars-file-in-config/` |
 | 024 | Fire on/off commands on engine startup | 2026-05-29 | `14a10f0` | `quick/024-initial-on-off-command-on-start/` |
 | 025 | Support export KEY=VALUE in env files | 2026-05-29 | `9f7c928` | `quick/025-env-file-parsing/` |
+| 026 | Add install.sh script + curl-pipe-install in README | 2026-05-29 | `32b284d` | `quick/026-install-sh-script/` |
+| 027 | Add README explanation about environment file | 2026-05-29 | `51e0114` | `quick/027-readme-environment-file/` |
+| 028 | Explain video group risk and recommend sudo/service | 2026-05-29 | `6422bdf` | `quick/028-linux-permissions-video-group-risk/` |
+| 029 | Add release-please automation with auto-merge | 2026-05-29 | `d21b745` | — |
+
+## Current Position
+
+**Milestone:** v1.1.0 — macOS Support & Docs Polish
+**Phase:** 1 — macOS Detection Backend (complete)
+**Plan:** 08-01 (Wave 1: macOSDetector), 08-02 (Wave 2: README docs)
+**Status:** Phase 1 complete — ready for next milestone or Phase 2
+**Last activity:** 2026-05-29 — Added release-please automation (auto-merge, CI, Homebrew tap)
 
 ## Next
-- Milestone v1.0.0 complete — shipped
-- Last activity: 2026-05-29 - Tagged v1.0.0
+- Milestone v1.1.0 in progress — define v1.1.0 requirements
+- Goals: macOS camera detection backend + README onboard docs
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install
 - 2026-05-29: Phase 7 added: Release Automation & Publishing
+- 2026-05-29: Milestone v1.1.0 started: macOS Support & Docs Polish
 
 ## Milestone History
 

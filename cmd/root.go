@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -63,7 +64,11 @@ func initConfig() {
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("ON_A_MEET")
 
-	viper.SetDefault("detect-method", "v4l2")
+	defaultMethod := "v4l2"
+	if runtime.GOOS == "darwin" {
+		defaultMethod = "darwin"
+	}
+	viper.SetDefault("detect-method", defaultMethod)
 	viper.SetDefault("interval", "1s")
 	viper.SetDefault("debounce", 3)
 	viper.SetDefault("timeout", "30s")

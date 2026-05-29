@@ -68,6 +68,7 @@
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 001 | Fix --detect flag defaulting to empty string | 2026-05-29 | `4b83107` | `quick/001-detect-flag-default/` |
+| 002 | Print config on detect startup | 2026-05-29 | `196ad05` | `quick/002-print-config-on-startup/` |
 
 ## Next
 - Milestone complete — v1 ready for review

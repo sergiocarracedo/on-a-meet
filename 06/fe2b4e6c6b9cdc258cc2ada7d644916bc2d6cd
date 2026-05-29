@@ -1,0 +1,23 @@
+.planning/quick/007-print-all-config-values/007-PLAN.md
+  s_57c2e42c824788::t_951d6a18efdda2 1-26
+.planning/STATE.md
+  s_57c2e42c824788::t_0ada8642341e2f 76
+.planning/quick/007-print-all-config-values/007-SUMMARY.md
+  s_57c2e42c824788::t_40956214fa499a 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "06fe2b4e6c6b9cdc258cc2ada7d644916bc2d6cd",
+  "prompts": {},
+  "sessions": {
+    "s_57c2e42c824788": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_191c58891ffeV4zFI4TtljUMfe",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>"
+    }
+  }
+}

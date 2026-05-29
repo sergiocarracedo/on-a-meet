@@ -107,6 +107,7 @@
 | 024 | Fire on/off commands on engine startup | 2026-05-29 | `14a10f0` | `quick/024-initial-on-off-command-on-start/` |
 | 025 | Support export KEY=VALUE in env files | 2026-05-29 | `9f7c928` | `quick/025-env-file-parsing/` |
 | 026 | Add install.sh script + curl-pipe-install in README | 2026-05-29 | `32b284d` | `quick/026-install-sh-script/` |
+| 027 | Add README explanation about environment file | 2026-05-29 | `51e0114` | `quick/027-readme-environment-file/` |
 
 ## Current Position
 
@@ -114,7 +115,7 @@
 **Phase:** 1 — macOS Detection Backend (complete)
 **Plan:** 08-01 (Wave 1: macOSDetector), 08-02 (Wave 2: README docs)
 **Status:** Phase 1 complete — ready for next milestone or Phase 2
-**Last activity:** 2026-05-29 — Completed quick task 026: install.sh script + curl-pipe-install in README
+**Last activity:** 2026-05-29 — Completed quick task 027: README explanation about environment file
 
 ## Next
 - Milestone v1.1.0 in progress — define v1.1.0 requirements

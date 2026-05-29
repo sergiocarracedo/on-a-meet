@@ -51,15 +51,17 @@
 | | 2026-05-29 | execute-phase 4 | Phase 4 implemented and verified — build passes, all tests passing |
 | | 2026-05-29 | discuss-phase 5 | 5 gray areas discussed, decisions captured |
 | | 2026-05-29 | plan-phase 5 | 2 plans created across 2 waves, research + verification passed |
+| | 2026-05-29 | execute-phase 5 | Phase 5 implemented and verified — 27 tests passing, goreleaser + README |
 
 ## Phase 5: lsof Backend & Polish
 
-**Status:** 🔄 Planning (2026-05-29)
-**Last action:** plan-phase 5 (2026-05-29)
+**Status:** ✅ Complete (2026-05-29)
+**Last action:** execute-phase 5 (2026-05-29)
 **Context file:** `.planning/phases/05-lsof-backend-polish/05-CONTEXT.md`
 **Decisions:** 5 areas discussed — lsof detection, backend factory, list command, goreleaser, README
 **Research:** Completed — `05-RESEARCH.md` (lsof exit codes, factory pattern, goreleaser)
-**Plans:** 2 plans across 2 waves
+**Plans:** 2 plans, 2 waves — all executed
+**Verification:** Passed — build passes, 27 tests passing
 
 ## Next
-- `execute-phase 5` — Execute Phase 5 (lsof Backend & Polish)
+- Milestone complete — v1 ready for review

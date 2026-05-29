@@ -3,8 +3,8 @@
 ## Current Phase
 
 **Milestone:** v1 — Initial release
-**Phase:** 5 — lsof Backend & Polish
-**Status:** planning
+**Phase:** 5 — lsof Backend & Polish ✅ complete
+**Status:** complete
 **Last updated:** 2026-05-29
 
 ## Project Summary
@@ -35,7 +35,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/STATE.md` — Project state and session tracking
 - `.planning/phases/01-project-scaffold-cli-foundation/` — Phase 1 context, plans, summaries
 
-## Phase 5 — Planning
+## Phase 5 ✅ Complete
 
 | Plan | Wave | Depends | Objective | Key Files |
 |------|------|---------|-----------|-----------|

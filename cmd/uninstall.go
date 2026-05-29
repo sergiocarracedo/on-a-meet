@@ -19,7 +19,7 @@ var uninstallCmd = &cobra.Command{
 			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet uninstall")
 		}
 
-		svc, err := service.New(&noopProgram{}, serviceConfig())
+		svc, err := service.New(&noopProgram{}, serviceConfig(""))
 		if err != nil {
 			return fmt.Errorf("service init failed: %w", err)
 		}

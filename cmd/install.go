@@ -15,7 +15,7 @@ type noopProgram struct{}
 func (p *noopProgram) Start(s service.Service) error { return nil }
 func (p *noopProgram) Stop(s service.Service) error  { return nil }
 
-func serviceConfig() *service.Config {
+func serviceConfig(user string) *service.Config {
 	return &service.Config{
 		Name:        "on-a-meet",
 		DisplayName: "on-a-meet",
@@ -25,11 +25,13 @@ func serviceConfig() *service.Config {
 			"--config", "/etc/on-a-meet/config.yaml",
 		},
 		WorkingDirectory: "/",
+		UserName:         user,
 	}
 }
 
 func installService() error {
-	svc, err := service.New(&noopProgram{}, serviceConfig())
+	originalUser := os.Getenv("SUDO_USER")
+	svc, err := service.New(&noopProgram{}, serviceConfig(originalUser))
 	if err != nil {
 		return fmt.Errorf("service init failed: %w", err)
 	}

@@ -73,6 +73,33 @@ off-command: 'notify-send "Camera" "Camera turned OFF"'
 
 All options can also be set via CLI flags, which override config values.
 
+### Environment file
+
+Optionally source variables from a file before running `--on`/`--off` commands.
+Variables are loaded as `KEY=VALUE` pairs (shell format, `export` prefix is allowed):
+
+```yaml
+environment-file: "/etc/default/on-a-meet"
+```
+
+Example env file (`/etc/default/on-a-meet`):
+
+```
+export HASS_TOKEN="eyJ..."  # API tokens, URLs, etc.
+HASS_SERVER="http://hass.local:8123"
+```
+
+These variables are merged into the environment of executed commands and can be
+referenced as shell variables:
+
+```bash
+on-a-meet detect \
+  --on 'curl -H "Bearer $HASS_TOKEN" $HASS_SERVER/api/webhook/camera-on'
+```
+
+When running as a system service, the path is also written into the systemd unit's
+`EnvironmentFile=` directive, making variables available to the service process itself.
+
 ## Usage
 
 ### Detect camera state changes

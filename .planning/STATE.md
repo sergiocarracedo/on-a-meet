@@ -69,6 +69,8 @@
 |---|-------------|------|--------|-----------|
 | 001 | Fix --detect flag defaulting to empty string | 2026-05-29 | `4b83107` | `quick/001-detect-flag-default/` |
 | 002 | Print config on detect startup | 2026-05-29 | `196ad05` | `quick/002-print-config-on-startup/` |
+| 003 | Fix V4L2 camera ON detection via /proc scan | 2026-05-29 | `1c2b662` | `quick/003-v4l2-detect-on-camera/` |
+| 004 | Fix --detect flag Viper bind clash detect/list | 2026-05-29 | `5e9e50d` | `quick/004-detect-flag-bind-fix/` |
 
 ## Next
 - Milestone complete — v1 ready for review

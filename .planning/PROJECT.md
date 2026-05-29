@@ -24,9 +24,19 @@ Reliably detect camera state changes and fire the correct command every time. Wh
 - Interactive onboard wizard (huh) — camera selection, method select with live test, config input, dry-run, auto sudo re-exec. All quick tasks 001-025.
 - Release automation: GoReleaser cross-platform builds (linux/darwin + amd64/arm64), GitHub Actions workflow, GitHub Releases with checksums.
 
+## Current Milestone: v1.1.0 — macOS Support & Docs Polish
+
+**Goal:** Add macOS camera detection backend and fix README gaps (onboard docs).
+
+**Target features:**
+- macOS camera detection backend (AVFoundation or IOKit)
+- README documentation for the `onboard` command
+- Cross-platform test coverage
+
 ### Active
 
-(Next milestone — TBD)
+- macOS camera detection
+- README onboard docs
 
 ### Out of Scope
 
@@ -50,7 +60,7 @@ The user wants polling (simplest implementation) as the default, with detection 
 - **Output**: pterm — consistent terminal output formatting
 - **OS**: Linux first (primary), macOS second
 - **Service**: systemd on Linux, launchd on macOS — auto-generate unit files via kardianos/service
-- **Version**: v1.0.0 — Initial release (2026-05-29)
+- **Version**: v1.1.0 — macOS Support & Docs Polish (in progress)
 
 ## Key Decisions
 
@@ -65,4 +75,4 @@ The user wants polling (simplest implementation) as the default, with detection 
 | Command timeout and overlap prevention | Prevent hung commands blocking transitions | ✓ context.WithTimeout, sync.Map same-state skip, Setpgid process kill |
 
 ---
-*Last updated: 2026-05-29 — v1.0.0 shipped*
+*Last updated: 2026-05-29 — v1.1.0 started*

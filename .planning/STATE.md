@@ -107,13 +107,22 @@
 | 024 | Fire on/off commands on engine startup | 2026-05-29 | `14a10f0` | `quick/024-initial-on-off-command-on-start/` |
 | 025 | Support export KEY=VALUE in env files | 2026-05-29 | `9f7c928` | `quick/025-env-file-parsing/` |
 
+## Current Position
+
+**Milestone:** v1.1.0 — macOS Support & Docs Polish
+**Phase:** Not started (defining requirements)
+**Plan:** —
+**Status:** Defining requirements
+**Last activity:** 2026-05-29 — Milestone v1.1.0 started
+
 ## Next
-- Milestone v1.0.0 complete — shipped
-- Last activity: 2026-05-29 - Tagged v1.0.0
+- Milestone v1.1.0 in progress
+- Goals: macOS camera detection backend + README onboard docs
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install
 - 2026-05-29: Phase 7 added: Release Automation & Publishing
+- 2026-05-29: Milestone v1.1.0 started: macOS Support & Docs Polish
 
 ## Milestone History
 

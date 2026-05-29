@@ -1,0 +1,21 @@
+cmd/onboard.go
+  s_57c2e42c824788::t_a657b31a928db7 1-298
+go.mod
+  s_57c2e42c824788::t_93fc2cecf2fd97 17-28,31-32,38-40,42-45,47,56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "456616600852d04a909b21b9a54533dc95882ffa",
+  "prompts": {},
+  "sessions": {
+    "s_57c2e42c824788": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_191c58891ffeV4zFI4TtljUMfe",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Sergio Carracedo <hi@sergiocarracedo.es>"
+    }
+  }
+}

@@ -4,13 +4,22 @@ CLI tool that detects camera on/off state and triggers user-defined commands.
 
 ## Installation
 
-### Quick install
+### Homebrew (recommended)
+
+```bash
+brew tap sergiocarracedo/homebrew-tap
+brew install on-a-meet
+```
+
+Works on both macOS and Linux (via the Homebrew prefix). Updates are handled by Homebrew — just run `brew upgrade on-a-meet`.
+
+### Quick install (Linux & macOS)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sergiocarracedo/on-a-meet/main/install.sh | sudo bash
 ```
 
-This detects your OS and architecture, downloads the correct binary, and installs it to `/usr/local/bin/`.
+Detects your OS and architecture, downloads the correct binary, and installs it to `/usr/local/bin/`.
 
 ## Manual installation
 

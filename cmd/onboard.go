@@ -184,28 +184,6 @@ Use --dry-run to preview the config before installing.`,
 			return fmt.Errorf("form cancelled: %w", err)
 		}
 
-		method = "v4l2"
-		var keepV4L2 bool
-		err = huh.NewConfirm().
-			Title("Detection method: V4L2").
-			Description("V4L2: Direct kernel syscall (Linux-only, no extra deps)\nLSOF: Uses 'lsof' command (cross-platform)").
-			Affirmative("Keep V4L2").
-			Negative("Change method").
-			Value(&keepV4L2).Run()
-		if err == nil && !keepV4L2 {
-			var methodSelect string
-			huh.NewSelect[string]().
-				Title("Detection method").
-				Options(
-					huh.NewOption("V4L2 (recommended)", "v4l2"),
-					huh.NewOption("lsof", "lsof"),
-				).
-				Value(&methodSelect).Run()
-			if methodSelect != "" {
-				method = methodSelect
-			}
-		}
-
 		var cameras []string
 		if cameraChoice == "all" {
 			cameras = make([]string, len(devices))
@@ -233,86 +211,121 @@ Use --dry-run to preview the config before installing.`,
 			interval = "1s"
 		}
 
-		testDet, err := detector.New(method)
-		if err != nil {
-			return fmt.Errorf("failed to create detector for test: %w", err)
-		}
+		method = "v4l2"
+		var runTest bool
+		huh.NewConfirm().
+			Title("Run detection test?").
+			Description("Verify that your camera detection is working correctly.\nYou'll be asked to turn your camera ON, then OFF.").
+			Affirmative("Test").
+			Negative("Skip").
+			Value(&runTest).Run()
 
-		reader := bufio.NewReader(os.Stdin)
+		if runTest {
+			testDet, err := detector.New(method)
+			if err == nil {
+				testFailed := false
+				reader := bufio.NewReader(os.Stdin)
 
-		for {
-			output.Warning.Println("Enable your camera now (open a video app), then press Enter to test detection...")
-			reader.ReadString('\n')
+				for {
+					output.Warning.Println("Enable your camera now (open a video app), then press Enter to test detection...")
+					reader.ReadString('\n')
 
-			anyOn := false
-			for _, cam := range cameras {
-				status, err := testDet.Detect(cam)
-				if err != nil {
-					output.Warning.Printfln("  %s: detection error: %v", cam, err)
-					continue
-				}
-				stateStr := "OFF"
-				if status.On {
-					stateStr = "ON"
-					anyOn = true
-				}
-				output.Info.Printfln("  %s ⟶ %s", cam, stateStr)
-			}
+					anyOn := false
+					for _, cam := range cameras {
+						status, err := testDet.Detect(cam)
+						if err != nil {
+							output.Warning.Printfln("  %s: detection error: %v", cam, err)
+							continue
+						}
+						stateStr := "OFF"
+						if status.On {
+							stateStr = "ON"
+							anyOn = true
+						}
+						output.Info.Printfln("  %s ⟶ %s", cam, stateStr)
+					}
 
-			if !anyOn {
-				output.Warning.Println("No cameras detected as ON. Try again?")
-				var retry bool
-				err := huh.NewConfirm().
-					Title("Detection test").
-					Description("At least one camera was expected to show ON but none detected. Retry?").
-					Affirmative("Retry").
-					Negative("Skip test").
-					Value(&retry).Run()
-				if err != nil || !retry {
+					if !anyOn {
+						output.Warning.Println("No cameras detected as ON. Try again?")
+						var retry bool
+						err := huh.NewConfirm().
+							Title("Detection test").
+							Description("At least one camera was expected to show ON but none detected. Retry?").
+							Affirmative("Retry").
+							Negative("Skip test").
+							Value(&retry).Run()
+						if err != nil || !retry {
+							testFailed = true
+							break
+						}
+						continue
+					}
 					break
 				}
-				continue
-			}
-			break
-		}
 
-		for {
-			output.Warning.Println("Disable your camera now (close the video app), then press Enter to confirm detection...")
-			reader.ReadString('\n')
+				for {
+					output.Warning.Println("Disable your camera now (close the video app), then press Enter to confirm detection...")
+					reader.ReadString('\n')
 
-			allOK := true
-			for _, cam := range cameras {
-				status, err := testDet.Detect(cam)
-				if err != nil {
-					output.Warning.Printfln("  %s: detection error: %v", cam, err)
-					allOK = false
-					continue
-				}
-				stateStr := "OFF"
-				if status.On {
-					stateStr = "ON"
-				}
-				output.Info.Printfln("  %s ⟶ %s", cam, stateStr)
-				if status.On {
-					allOK = false
-				}
-			}
+					allOK := true
+					for _, cam := range cameras {
+						status, err := testDet.Detect(cam)
+						if err != nil {
+							output.Warning.Printfln("  %s: detection error: %v", cam, err)
+							allOK = false
+							continue
+						}
+						stateStr := "OFF"
+						if status.On {
+							stateStr = "ON"
+						}
+						output.Info.Printfln("  %s ⟶ %s", cam, stateStr)
+						if status.On {
+							allOK = false
+						}
+					}
 
-			if !allOK {
-				output.Warning.Println("Some cameras were not detected as OFF. Try again?")
-				var retryOff bool
-				err := huh.NewConfirm().
-					Title("Off detection test").
-					Description("Camera was expected to show OFF but is still detected as ON. Retry?").
-					Affirmative("Retry").
-					Negative("Skip test").
-					Value(&retryOff).Run()
-				if err != nil || !retryOff {
+					if !allOK {
+						output.Warning.Println("Some cameras were not detected as OFF. Try again?")
+						var retryOff bool
+						err := huh.NewConfirm().
+							Title("Off detection test").
+							Description("Camera was expected to show OFF but is still detected as ON. Retry?").
+							Affirmative("Retry").
+							Negative("Skip test").
+							Value(&retryOff).Run()
+						if err != nil || !retryOff {
+							testFailed = true
+							break
+						}
+						continue
+					}
 					break
 				}
-				continue
+
+				if testFailed {
+					var keepV4L2 bool
+					huh.NewConfirm().
+						Title("Detection method: V4L2").
+						Description("V4L2: Direct kernel syscall (Linux-only, no extra deps)\nLSOF: Uses 'lsof' command (cross-platform)").
+						Affirmative("Keep V4L2").
+						Negative("Change method").
+						Value(&keepV4L2).Run()
+					if !keepV4L2 {
+						var methodSelect string
+						huh.NewSelect[string]().
+							Title("Detection method").
+							Options(
+								huh.NewOption("V4L2 (recommended)", "v4l2"),
+								huh.NewOption("lsof", "lsof"),
+							).
+							Value(&methodSelect).Run()
+						if methodSelect != "" {
+							method = methodSelect
+						}
+					}
+				}
 			}
-			break
 		}
 
 		cfg := onboardConfig{

@@ -147,17 +147,6 @@ Use --dry-run to preview the config before installing.`,
 					Value(&camSelections),
 			).WithHideFunc(func() bool { return cameraChoice == "all" }),
 			huh.NewGroup(
-				huh.NewNote().Title("Detection methods").
-					Description("V4L2: Direct kernel syscall (Linux-only, faster, no extra deps)\nLSOF: Uses 'lsof' command (cross-platform, requires lsof installed)"),
-				huh.NewSelect[string]().
-					Title("Detection method").
-					Options(
-						huh.NewOption("V4L2 (recommended)", "v4l2"),
-						huh.NewOption("lsof", "lsof"),
-					).
-					Value(&method),
-			),
-			huh.NewGroup(
 				huh.NewInput().
 					Title("Debounce count").
 					Description("Required consecutive same-state polls before firing (higher = less false positives)").
@@ -193,6 +182,28 @@ Use --dry-run to preview the config before installing.`,
 
 		if err := form.Run(); err != nil {
 			return fmt.Errorf("form cancelled: %w", err)
+		}
+
+		method = "v4l2"
+		var keepV4L2 bool
+		err = huh.NewConfirm().
+			Title("Detection method: V4L2").
+			Description("V4L2: Direct kernel syscall (Linux-only, no extra deps)\nLSOF: Uses 'lsof' command (cross-platform)").
+			Affirmative("Keep V4L2").
+			Negative("Change method").
+			Value(&keepV4L2).Run()
+		if err == nil && !keepV4L2 {
+			var methodSelect string
+			huh.NewSelect[string]().
+				Title("Detection method").
+				Options(
+					huh.NewOption("V4L2 (recommended)", "v4l2"),
+					huh.NewOption("lsof", "lsof"),
+				).
+				Value(&methodSelect).Run()
+			if methodSelect != "" {
+				method = methodSelect
+			}
 		}
 
 		var cameras []string
@@ -233,30 +244,27 @@ Use --dry-run to preview the config before installing.`,
 			output.Warning.Println("Enable your camera now (open a video app), then press Enter to test detection...")
 			reader.ReadString('\n')
 
-			allOK := true
+			anyOn := false
 			for _, cam := range cameras {
 				status, err := testDet.Detect(cam)
 				if err != nil {
 					output.Warning.Printfln("  %s: detection error: %v", cam, err)
-					allOK = false
 					continue
 				}
 				stateStr := "OFF"
 				if status.On {
 					stateStr = "ON"
+					anyOn = true
 				}
 				output.Info.Printfln("  %s ⟶ %s", cam, stateStr)
-				if !status.On {
-					allOK = false
-				}
 			}
 
-			if !allOK {
-				output.Warning.Println("Some cameras were not detected as ON. Try again?")
+			if !anyOn {
+				output.Warning.Println("No cameras detected as ON. Try again?")
 				var retry bool
 				err := huh.NewConfirm().
 					Title("Detection test").
-					Description("Camera was expected to show ON but detected differently. Retry?").
+					Description("At least one camera was expected to show ON but none detected. Retry?").
 					Affirmative("Retry").
 					Negative("Skip test").
 					Value(&retry).Run()

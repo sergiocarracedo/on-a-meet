@@ -111,9 +111,9 @@
 
 **Milestone:** v1.1.0 — macOS Support & Docs Polish
 **Phase:** 1 — macOS Detection Backend (planning)
-**Plan:** —
+**Plan:** 08-01 (Wave 1: macOSDetector), 08-02 (Wave 2: README docs)
 **Status:** Planning
-**Last activity:** 2026-05-29 — Milestone v1.1.0 initialized, 2-phase roadmap created
+**Last activity:** 2026-05-29 — Phase 1 plans created (08-01: macOSDetector, 08-02: README docs)
 
 ## Next
 - Milestone v1.1.0 in progress — define v1.1.0 requirements

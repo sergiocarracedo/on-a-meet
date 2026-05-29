@@ -36,6 +36,7 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 - `.planning/research/` — Stack, Features, Architecture, Pitfalls, Summary
 - `.planning/STATE.md` — Project state and session tracking
 - `.planning/phases/07-release-automation-and-publishing/` — Phase 7 context, plans, summaries
+- `.planning/phases/08-macos-detection-backend/` — Phase 8 context, plans, summaries
 
 ## Phase 1 🚧 In Progress
 

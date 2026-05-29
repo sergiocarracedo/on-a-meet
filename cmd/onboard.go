@@ -47,8 +47,9 @@ type writeConfig struct {
 }
 
 var (
-	onboardDryRun bool
-	onboardApply  string
+	onboardDryRun     bool
+	onboardApply      string
+	onboardConfigFile string
 )
 
 var onboardCmd = &cobra.Command{
@@ -59,6 +60,7 @@ detection method configuration with live testing, and
 automatic service installation.
 
 Run without flags for the full interactive setup.
+Use --config <file> to skip the wizard and apply a pre-made JSON config.
 Use --dry-run to preview the config before installing.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if onboardApply != "" {
@@ -124,6 +126,88 @@ Use --dry-run to preview the config before installing.`,
 			}
 
 			output.Success.Printfln("Setup complete! Config: %s", configPath)
+			return nil
+		}
+
+		if onboardConfigFile != "" {
+			data, err := os.ReadFile(onboardConfigFile)
+			if err != nil {
+				return fmt.Errorf("failed to read config file: %w", err)
+			}
+
+			var cfg onboardConfig
+			if err := json.Unmarshal(data, &cfg); err != nil {
+				return fmt.Errorf("failed to parse config file: %w", err)
+			}
+
+			if cfg.Method == "" {
+				cfg.Method = "v4l2"
+			}
+			if cfg.Interval == "" {
+				cfg.Interval = "1s"
+			}
+			if cfg.Debounce == 0 {
+				cfg.Debounce = 2
+			}
+
+			if onboardDryRun {
+				output.Success.Println("Configuration preview:")
+				fmt.Printf("detect-method: %s\n", cfg.Method)
+				fmt.Printf("interval: %s\n", cfg.Interval)
+				fmt.Printf("debounce: %d\n", cfg.Debounce)
+				if cfg.OnCmd != "" {
+					fmt.Printf("on-command: %s\n", cfg.OnCmd)
+				}
+				if cfg.OffCmd != "" {
+					fmt.Printf("off-command: %s\n", cfg.OffCmd)
+				}
+				if len(cfg.Cameras) == 1 {
+					fmt.Printf("camera: %s\n", cfg.Cameras[0])
+				} else {
+					fmt.Println("cameras:")
+					for _, cam := range cfg.Cameras {
+						fmt.Printf("  - %s\n", cam)
+					}
+				}
+				fmt.Println("\nRun without --dry-run to write config and install the service.")
+				return nil
+			}
+
+			var confirm bool
+			err = huh.NewConfirm().
+				Title("Ready to install").
+				Description(fmt.Sprintf("Method: %s | Interval: %s | Debounce: %d | Cameras: %d\nThis will write config and install the service (requires sudo).", cfg.Method, cfg.Interval, cfg.Debounce, len(cfg.Cameras))).
+				Affirmative("Install").
+				Negative("Abort").
+				Value(&confirm).Run()
+			if err != nil || !confirm {
+				output.Info.Println("Install cancelled.")
+				return nil
+			}
+
+			data, err = json.MarshalIndent(cfg, "", "  ")
+			if err != nil {
+				return fmt.Errorf("failed to marshal config: %w", err)
+			}
+
+			tmpPath := "/tmp/on-a-meet-onboard.json"
+			if err := os.WriteFile(tmpPath, data, 0644); err != nil {
+				return fmt.Errorf("failed to write temp config: %w", err)
+			}
+
+			binary, err := os.Executable()
+			if err != nil {
+				return fmt.Errorf("failed to find binary path: %w", err)
+			}
+
+			output.Info.Printfln("Running with elevated privileges to complete setup...")
+			sudoCmd := exec.Command("sudo", binary, "onboard", "--apply", tmpPath)
+			sudoCmd.Stdout = os.Stdout
+			sudoCmd.Stderr = os.Stderr
+			if err := sudoCmd.Run(); err != nil {
+				return fmt.Errorf("sudo install failed: %w", err)
+			}
+
 			return nil
 		}
 
@@ -447,4 +531,5 @@ func init() {
 	rootCmd.AddCommand(onboardCmd)
 	onboardCmd.Flags().BoolVar(&onboardDryRun, "dry-run", false, "preview config without installing")
 	onboardCmd.Flags().StringVar(&onboardApply, "apply", "", "apply collected config file and install service")
+	onboardCmd.Flags().StringVar(&onboardConfigFile, "config", "", "read config from JSON file (skip interactive wizard)")
 }

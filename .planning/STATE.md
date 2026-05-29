@@ -74,6 +74,7 @@
 | 005 | Emit initial camera status on detect start | 2026-05-29 | `d33a9df` | `quick/005-emit-initial-camera-status-on-start/` |
 | 006 | Log on/off callback exit code and verbose output | 2026-05-29 | `8ca2245` | `quick/006-log-on-off-callbacks-exit-code/` |
 | 007 | Print all config values on startup | 2026-05-29 | `45c7fa6` | `quick/007-print-all-config-values/` |
+| 008 | Fix verbose detection and callback execution display | 2026-05-29 | `a30790c` | `quick/008-fix-verbose-callback-display/` |
 
 ## Next
 - Milestone complete — v1 ready for review

@@ -105,10 +105,11 @@
 | 022 | Add service subcommand group + verbose config | 2026-05-29 | `e81f640` | `quick/022-add-service-subcommand-and-verbose/` |
 | 023 | Add environment-file config for service unit | 2026-05-29 | `5d58d03` | `quick/023-envvars-file-in-config/` |
 | 024 | Fire on/off commands on engine startup | 2026-05-29 | `14a10f0` | `quick/024-initial-on-off-command-on-start/` |
+| 025 | Support export KEY=VALUE in env files | 2026-05-29 | `9f7c928` | `quick/025-env-file-parsing/` |
 
 ## Next
 - Milestone v1 complete — all 6 phases done
-- Last activity: 2026-05-29 - Completed quick task 024: Fire on/off commands on engine startup
+- Last activity: 2026-05-29 - Completed quick task 025: Support export KEY=VALUE in env files
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install

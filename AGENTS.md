@@ -72,9 +72,13 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 │   ├── root.go           # Root command, Viper config, flags
 │   ├── onboard.go        # Interactive setup wizard (huh)
 │   ├── detect.go         # detect subcommand — V4L2 polling + command execution
-│   ├── list.go           # list subcommand (stub)
-│   ├── install.go        # install subcommand — kardianos/service Install()+Start()
-│   └── uninstall.go      # uninstall subcommand — kardianos/service Stop()+Uninstall()
+│   ├── list.go           # list subcommand — pterm table of cameras
+│   ├── service.go        # service parent command (+ alias svc)
+│   ├── install.go        # service install — kardianos/service Install()+Start()
+│   ├── uninstall.go      # service uninstall — kardianos/service Stop()+Uninstall()
+│   ├── start.go          # service start
+│   ├── stop.go           # service stop
+│   └── restart.go        # service restart
 ├── internal/
 │   ├── config/
 │   │   ├── config.go     # Config struct & defaults

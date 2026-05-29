@@ -33,7 +33,7 @@ user-defined commands when camera state changes.
 
 Uses V4L2 by default (lsof also available) to check /dev/video* device status.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cfg := configFromViper()
+		cfg := configFromViper(cmd.Flags().Lookup("detect").Changed)
 
 		interval, err := time.ParseDuration(cfg.Interval)
 		if err != nil {
@@ -63,6 +63,18 @@ Uses V4L2 by default (lsof also available) to check /dev/video* device status.`,
 			output.Info.Printfln("  %s — %s (driver: %s)", d.Path, d.Card, d.Driver)
 		}
 		output.Info.Printfln("Config: method=%s interval=%s debounce=%d timeout=%s", cfg.DetectMethod, cfg.Interval, cfg.Debounce, cfg.Timeout)
+
+		for _, d := range devices {
+			status, err := det.Detect(d.Path)
+			if err != nil {
+				continue
+			}
+			stateStr := "OFF"
+			if status.On {
+				stateStr = "ON"
+			}
+			output.Info.Printfln("  %s ⟶ %s", d.Path, stateStr)
+		}
 
 		timeout, err := time.ParseDuration(cfg.Timeout)
 		if err != nil {
@@ -160,7 +172,11 @@ type detectConfig struct {
 	DetectMethod string
 }
 
-func configFromViper() detectConfig {
+func configFromViper(detectChanged bool) detectConfig {
+	method := detectMethod
+	if !detectChanged {
+		method = viper.GetString("detect-method")
+	}
 	return detectConfig{
 		Camera:       viper.GetString("camera"),
 		Interval:     viper.GetString("interval"),
@@ -168,6 +184,6 @@ func configFromViper() detectConfig {
 		OnCmd:        viper.GetString("on-command"),
 		OffCmd:       viper.GetString("off-command"),
 		Timeout:      viper.GetString("timeout"),
-		DetectMethod: viper.GetString("detect-method"),
+		DetectMethod: method,
 	}
 }

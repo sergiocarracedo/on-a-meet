@@ -79,4 +79,7 @@
 | 010 | Expand env vars in commands and fix viper defaults | 2026-05-29 | `f7fdbe9` | `quick/010-shell-env-expand-viper-defaults/` |
 
 ## Next
-- Milestone complete — v1 ready for review
+- Phase 6 added: Onboard Command — Assisted Install
+
+### Roadmap Evolution
+- Phase 6 added: Onboard Command — Assisted Install

@@ -17,7 +17,10 @@ var listCmd = &cobra.Command{
 	Long: `Enumerates /dev/video* devices and shows driver information
 and current on/off status for each camera.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		method := viper.GetString("detect-method")
+		method := listMethod
+		if !cmd.Flags().Lookup("detect").Changed {
+			method = viper.GetString("detect-method")
+		}
 
 		det, err := detector.New(method)
 		if err != nil {

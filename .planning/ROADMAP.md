@@ -76,22 +76,17 @@
 
 ## Phase 5: lsof Backend & Polish ✅
 
-**Goal:** Fallback detection method, documentation, and release readiness.
+**Status:** ✅ Complete (2026-05-29)
+**Depends on:** Phase 3
 
-**Requirements:** REQ-013, REQ-012, REQ-008
+## Phase 6: Onboard Command — Assisted Install
 
-**Tasks:**
-1. ✅ lsof detection backend — LsofDetector with New(method) factory
-2. ✅ --detect flag to select backend (v4l2, lsof)
-3. ✅ `on-a-meet list` command — pterm table of detected cameras with status
-4. ✅ Release scripting (goreleaser config)
-5. ✅ README with usage examples, install instructions, video group docs
-6. ✅ CLI help text refinement
+**Goal:** Interactive `onboard` command that walks users through camera selection, detection method selection with live test, configuration, and automatic service installation.
+**Status:** [ ] Not started
+**Depends on:** Phase 5
 
-**Success criteria:** `on-a-meet list` shows all cameras. `--detect lsof` works as alternative detection method.
-**Completed:** 2026-05-29
-
----
+### Plans
+*Not yet planned — run `plan-phase 6`*
 
 ## Phase Dependencies
 

@@ -4,6 +4,7 @@ package detector
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"syscall"
 	"time"
@@ -96,10 +97,45 @@ func nullTerminatedString(b []byte) string {
 	return string(b)
 }
 
+func hasOpenHandle(devicePath string) bool {
+	entries, err := os.ReadDir("/proc")
+	if err != nil {
+		return false
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		pid := entry.Name()
+		if pid[0] < '0' || pid[0] > '9' {
+			continue
+		}
+		fdDir := filepath.Join("/proc", pid, "fd")
+		fds, err := os.ReadDir(fdDir)
+		if err != nil {
+			continue
+		}
+		for _, fd := range fds {
+			linkPath := filepath.Join(fdDir, fd.Name())
+			link, err := os.Readlink(linkPath)
+			if err != nil {
+				continue
+			}
+			if link == devicePath {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (d *V4L2Detector) Detect(devicePath string) (DeviceStatus, error) {
 	fd, err := unix.Open(devicePath, unix.O_RDWR, 0)
 	if err == nil {
 		unix.Close(fd)
+		if hasOpenHandle(devicePath) {
+			return DeviceStatus{On: true, CheckedAt: time.Now()}, nil
+		}
 		return DeviceStatus{On: false, CheckedAt: time.Now()}, nil
 	}
 

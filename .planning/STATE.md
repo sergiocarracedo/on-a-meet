@@ -110,13 +110,13 @@
 ## Current Position
 
 **Milestone:** v1.1.0 — macOS Support & Docs Polish
-**Phase:** Not started (defining requirements)
+**Phase:** 1 — macOS Detection Backend (planning)
 **Plan:** —
-**Status:** Defining requirements
-**Last activity:** 2026-05-29 — Milestone v1.1.0 started
+**Status:** Planning
+**Last activity:** 2026-05-29 — Milestone v1.1.0 initialized, 2-phase roadmap created
 
 ## Next
-- Milestone v1.1.0 in progress
+- Milestone v1.1.0 in progress — define v1.1.0 requirements
 - Goals: macOS camera detection backend + README onboard docs
 
 ### Roadmap Evolution

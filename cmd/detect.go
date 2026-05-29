@@ -22,6 +22,7 @@ var (
 	detectOnCmd    string
 	detectOffCmd   string
 	detectTimeout  string
+	detectMethod   string
 )
 
 var detectCmd = &cobra.Command{
@@ -30,7 +31,7 @@ var detectCmd = &cobra.Command{
 	Long: `Continuously monitors camera devices and fires
 user-defined commands when camera state changes.
 
-Uses V4L2 by default to check /dev/video* device status.`,
+Uses V4L2 by default (lsof also available) to check /dev/video* device status.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg := configFromViper()
 
@@ -39,7 +40,10 @@ Uses V4L2 by default to check /dev/video* device status.`,
 			return err
 		}
 
-		det := detector.NewV4L2Detector()
+		det, err := detector.New(cfg.DetectMethod)
+		if err != nil {
+			return err
+		}
 
 		devices, err := det.ListDevices()
 		if err != nil {
@@ -135,30 +139,34 @@ func init() {
 	detectCmd.Flags().StringVarP(&detectOnCmd, "on", "", "", "command to run when camera turns on")
 	detectCmd.Flags().StringVarP(&detectOffCmd, "off", "", "", "command to run when camera turns off")
 	detectCmd.Flags().StringVarP(&detectTimeout, "timeout", "t", "30s", "command execution timeout (0 for no timeout)")
+	detectCmd.Flags().StringVarP(&detectMethod, "detect", "d", "", "detection method (v4l2, lsof)")
 
 	viper.BindPFlag("camera", detectCmd.Flags().Lookup("camera"))
 	viper.BindPFlag("interval", detectCmd.Flags().Lookup("interval"))
 	viper.BindPFlag("on-command", detectCmd.Flags().Lookup("on"))
 	viper.BindPFlag("off-command", detectCmd.Flags().Lookup("off"))
 	viper.BindPFlag("timeout", detectCmd.Flags().Lookup("timeout"))
+	viper.BindPFlag("detect-method", detectCmd.Flags().Lookup("detect"))
 }
 
 type detectConfig struct {
-	Camera   string
-	Interval string
-	Debounce int
-	OnCmd    string
-	OffCmd   string
-	Timeout  string
+	Camera       string
+	Interval     string
+	Debounce     int
+	OnCmd        string
+	OffCmd       string
+	Timeout      string
+	DetectMethod string
 }
 
 func configFromViper() detectConfig {
 	return detectConfig{
-		Camera:   viper.GetString("camera"),
-		Interval: viper.GetString("interval"),
-		Debounce: viper.GetInt("debounce"),
-		OnCmd:    viper.GetString("on-command"),
-		OffCmd:   viper.GetString("off-command"),
-		Timeout:  viper.GetString("timeout"),
+		Camera:       viper.GetString("camera"),
+		Interval:     viper.GetString("interval"),
+		Debounce:     viper.GetInt("debounce"),
+		OnCmd:        viper.GetString("on-command"),
+		OffCmd:       viper.GetString("off-command"),
+		Timeout:      viper.GetString("timeout"),
+		DetectMethod: viper.GetString("detect-method"),
 	}
 }

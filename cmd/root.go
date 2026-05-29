@@ -54,6 +54,7 @@ func initConfig() {
 		cobra.CheckErr(err)
 
 		viper.AddConfigPath(home + "/.config/on-a-meet")
+		viper.AddConfigPath("/etc/on-a-meet")
 		viper.AddConfigPath(".")
 		viper.SetConfigType("yaml")
 		viper.SetConfigName("config")
@@ -69,6 +70,8 @@ func initConfig() {
 	viper.SetDefault("camera", "")
 	viper.SetDefault("on-command", "")
 	viper.SetDefault("off-command", "")
+	viper.SetDefault("silent", false)
+	viper.SetDefault("verbose", false)
 
 	output.Init(cfgSilent, cfgVerbose)
 

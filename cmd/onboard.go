@@ -84,6 +84,19 @@ Use --dry-run to preview the config before installing.`,
 			}
 
 			configPath := configDir + "/config.yaml"
+			if _, err := os.Stat(configPath); err == nil {
+				var overwrite bool
+				huh.NewConfirm().
+					Title("Config already exists").
+					Description("The configuration file already exists. Overwrite?").
+					Affirmative("Overwrite").
+					Negative("Keep existing").
+					Value(&overwrite).Run()
+				if !overwrite {
+					output.Info.Printfln("Keeping existing config at %s", configPath)
+					return nil
+				}
+			}
 			if err := os.WriteFile(configPath, yamlData, 0644); err != nil {
 				return fmt.Errorf("failed to write config file: %w", err)
 			}

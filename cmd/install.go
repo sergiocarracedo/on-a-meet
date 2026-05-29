@@ -34,9 +34,16 @@ func installService() error {
 		return fmt.Errorf("service init failed: %w", err)
 	}
 
+	// Stop existing service if running
+	_ = svc.Stop()
+
 	output.Info.Println("Installing service...")
 	if err := svc.Install(); err != nil {
-		return fmt.Errorf("service install failed: %w", err)
+		// If unit already exists, remove and retry
+		_ = svc.Uninstall()
+		if err := svc.Install(); err != nil {
+			return fmt.Errorf("service install failed: %w", err)
+		}
 	}
 	output.Success.Println("Service unit created")
 

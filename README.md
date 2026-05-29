@@ -4,7 +4,7 @@ CLI tool that detects camera on/off state and triggers user-defined commands.
 
 ## Installation
 
-### Binary (Linux / macOS)
+### Binary (Linux)
 
 Download the latest binary for your platform from the
 [releases page](https://github.com/sergiocarracedo/on-a-meet/releases),
@@ -15,6 +15,18 @@ chmod +x on-a-meet
 sudo mv on-a-meet /usr/local/bin/
 ```
 
+### Binary (macOS)
+
+Download the latest darwin binary:
+
+```bash
+curl -L -o on-a-meet https://github.com/sergiocarracedo/on-a-meet/releases/latest/download/on-a-meet_darwin_amd64
+chmod +x on-a-meet
+sudo mv on-a-meet /usr/local/bin/
+```
+
+> **Permissions:** macOS detection uses the built-in `log` and `system_profiler` commands — no additional permissions required. The tool reads system logs rather than accessing camera hardware directly, so no `NSCameraUsageDescription` entitlement is needed.
+
 ### From source
 
 ```bash
@@ -23,7 +35,7 @@ go install github.com/sergiocarracedo/on-a-meet@latest
 
 Requires Go 1.22+. The binary is placed in `$GOPATH/bin` (or `$HOME/go/bin`).
 
-### Permissions
+### Linux Permissions
 
 Access to `/dev/video*` devices requires the `video` group:
 
@@ -110,7 +122,20 @@ The service uses `/etc/on-a-meet/config.yaml` for configuration.
 
 ### Interactive setup
 
+The `onboard` command guides you through an interactive wizard:
+
 ```bash
-on-a-meet onboard           # Full wizard
-on-a-meet onboard --dry-run # Preview config only
+on-a-meet onboard                # Full wizard
+on-a-meet onboard --dry-run      # Preview config without applying
 ```
+
+The wizard steps through:
+
+1. **Camera selection** — Multi-select from detected cameras
+2. **Detection method** — Choose `v4l2`, `lsof`, or `darwin` (macOS)
+3. **Live test** — Verify the method can detect camera state
+4. **Commands** — Configure `--on` and `--off` commands with template support
+5. **Apply** — Write config and optionally install as a system service
+
+On Linux, the sudo apply path writes config to `/etc/on-a-meet/config.yaml`
+and installs the system service automatically.

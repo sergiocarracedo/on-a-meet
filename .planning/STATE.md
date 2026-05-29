@@ -100,10 +100,11 @@
 | 017 | Fix YAML on/off command quoting in onboard --apply | 2026-05-29 | `19eb82d` | `quick/017-yaml-on-off-command-quoting/` |
 | 018 | Add --config flag to onboard for JSON config input | 2026-05-29 | `762a831` | `quick/018-json-config-flag/` |
 | 019 | Accept "all" string for cameras in --config JSON | 2026-05-29 | `0808bce` | `quick/019-cameras-all-string/` |
+| 020 | Service runs commands as original user | 2026-05-29 | `789003b` | `quick/020-service-run-as-original-user/` |
 
 ## Next
 - Milestone v1 complete — all 6 phases done
-- Last activity: 2026-05-29 - Completed quick task 019: Accept "all" string for cameras in --config JSON
+- Last activity: 2026-05-29 - Completed quick task 020: Service runs commands as original user
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install

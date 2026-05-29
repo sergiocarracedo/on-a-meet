@@ -103,10 +103,11 @@
 | 020 | Service runs commands as original user | 2026-05-29 | `789003b` | `quick/020-service-run-as-original-user/` |
 | 021 | Add restart service command | 2026-05-29 | `9af4f39` | `quick/021-restart-service-command/` |
 | 022 | Add service subcommand group + verbose config | 2026-05-29 | `e81f640` | `quick/022-add-service-subcommand-and-verbose/` |
+| 023 | Add environment-file config for service unit | 2026-05-29 | `5d58d03` | `quick/023-envvars-file-in-config/` |
 
 ## Next
 - Milestone v1 complete — all 6 phases done
-- Last activity: 2026-05-29 - Completed quick task 022: Add service subcommand group + verbose config
+- Last activity: 2026-05-29 - Completed quick task 023: Add environment-file config for service unit
 
 ### Roadmap Evolution
 - 2026-05-29: Phase 6 added + completed: Onboard Command — Assisted Install

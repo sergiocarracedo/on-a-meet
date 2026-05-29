@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/sergiocarracedo/on-a-meet/compare/v1.0.0...v1.1.0) (2026-05-29)
+
+
+### Features
+
+* add release-please automation with auto-merge (ci, release PR, GoReleaser) ([d21b745](https://github.com/sergiocarracedo/on-a-meet/commit/d21b74547efbbd5ed231467aa90b37076db73d22))
+* add release-please automation with auto-merge, CI, and Homebrew tap ([40d5960](https://github.com/sergiocarracedo/on-a-meet/commit/40d5960f778298261be78dbf72895050eb04b647))
+* add version subcommand ([b80a367](https://github.com/sergiocarracedo/on-a-meet/commit/b80a3674315ad882584fb1faea67b53ed069ef15))
+* implement macOS detection backend (MacOSDetector) with log stream + system_profiler ([c3b3087](https://github.com/sergiocarracedo/on-a-meet/commit/c3b30870f8a8af6c61e88238d57b14371bd2760d))
+* **quick-026:** add install.sh script with curl-pipe-install in README ([32b284d](https://github.com/sergiocarracedo/on-a-meet/commit/32b284d48d5d21a76343df342ea3751c4da063ed))
+* restore Homebrew tap publishing via GoReleaser ([7b100b1](https://github.com/sergiocarracedo/on-a-meet/commit/7b100b167d73c6d83a16397a6bda696cecf74fd3))
+
 ## 1.0.0 (2026-05-29)
 
 

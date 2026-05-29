@@ -94,6 +94,7 @@
 | 011 | Fix camera selection UX (all default, select-all toggle) | 2026-05-29 | `57ed001` | `quick/011-camera-selection-default-all/` |
 | 012 | Fix config loading from onboard | 2026-05-29 | `60dbd9d` | `quick/012-fix-config-loading/` |
 | 013 | Improve onboard detection test UX | 2026-05-29 | `c747722` | `quick/013-improve-onboard-detection-test-ux/` |
+| 014 | Make detection test optional, show method change only after failure | 2026-05-29 | `895949c` | `quick/014-onboard-detection-test-optional/` |
 
 ## Next
 - Milestone v1 complete — all 6 phases done

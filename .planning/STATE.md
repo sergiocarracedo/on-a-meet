@@ -72,6 +72,7 @@
 | 003 | Fix V4L2 camera ON detection via /proc scan | 2026-05-29 | `1c2b662` | `quick/003-v4l2-detect-on-camera/` |
 | 004 | Fix --detect flag Viper bind clash detect/list | 2026-05-29 | `5e9e50d` | `quick/004-detect-flag-bind-fix/` |
 | 005 | Emit initial camera status on detect start | 2026-05-29 | `d33a9df` | `quick/005-emit-initial-camera-status-on-start/` |
+| 006 | Log on/off callback exit code and verbose output | 2026-05-29 | `8ca2245` | `quick/006-log-on-off-callbacks-exit-code/` |
 
 ## Next
 - Milestone complete — v1 ready for review

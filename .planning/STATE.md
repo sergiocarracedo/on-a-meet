@@ -91,6 +91,7 @@
 | 008 | Fix verbose detection and callback execution display | 2026-05-29 | `a30790c` | `quick/008-fix-verbose-callback-display/` |
 | 009 | Redact JWT tokens from CLI output | 2026-05-29 | `cdf32b8` | `quick/009-redact-tokens-in-output/` |
 | 010 | Expand env vars in commands and fix viper defaults | 2026-05-29 | `f7fdbe9` | `quick/010-shell-env-expand-viper-defaults/` |
+| 011 | Fix camera selection UX (all default, select-all toggle) | 2026-05-29 | `57ed001` | `quick/011-camera-selection-default-all/` |
 
 ## Next
 - Milestone v1 complete — all 6 phases done

@@ -71,8 +71,14 @@ func TestEngineStartup(t *testing.T) {
 
 	eng.Run(ctx)
 
-	if len(onChangeCalls) > 0 {
-		t.Errorf("expected no onChange calls on startup, got %d: %v", len(onChangeCalls), onChangeCalls)
+	if len(onChangeCalls) != 2 {
+		t.Fatalf("expected 2 initial onChange calls on startup, got %d: %v", len(onChangeCalls), onChangeCalls)
+	}
+	expectedPaths := map[string]bool{"/dev/video0": true, "/dev/video1": true}
+	for _, p := range onChangeCalls {
+		if !expectedPaths[p] {
+			t.Errorf("unexpected path in onChange: %s", p)
+		}
 	}
 }
 
@@ -116,12 +122,12 @@ func TestDebounce(t *testing.T) {
 	fires := len(onChange.calls)
 	onChange.mu.Unlock()
 
-	if fires != 1 {
-		t.Errorf("expected 1 onChange fire after debounce=3, got %d", fires)
+	if fires != 2 {
+		t.Errorf("expected 2 onChange fires (1 initial + 1 after debounce), got %d", fires)
 	}
 
 	onChange.mu.Lock()
-	call := onChange.calls[0]
+	call := onChange.calls[1]
 	onChange.mu.Unlock()
 	if call.newState != true {
 		t.Errorf("expected newState=true, got %v", call.newState)

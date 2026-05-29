@@ -77,11 +77,18 @@ func (e *Engine) Run(ctx context.Context) error {
 		filtered = append(filtered, d)
 	}
 
+	type initDevice struct {
+		info   detector.DeviceInfo
+		status detector.DeviceStatus
+	}
+	var initDevices []initDevice
+
 	for _, d := range filtered {
 		status, err := e.detector.Detect(d.Path)
 		if err != nil {
 			continue
 		}
+		initDevices = append(initDevices, initDevice{d, status})
 		e.mu.Lock()
 		e.states[d.Path] = &deviceState{
 			info:           d,
@@ -90,6 +97,12 @@ func (e *Engine) Run(ctx context.Context) error {
 			debounceTarget: e.debounce,
 		}
 		e.mu.Unlock()
+	}
+
+	for _, id := range initDevices {
+		if e.onChange != nil {
+			e.onChange(id.info.Path, !id.status.On, id.status.On, id.info)
+		}
 	}
 
 	for {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/sergiocarracedo/on-a-meet/compare/v1.2.0...v1.2.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* add bottle :unneeded to Homebrew formula ([f94031a](https://github.com/sergiocarracedo/on-a-meet/commit/f94031a2340813c426c18a9c160bfd58e398bfd8))
+
 ## [1.2.0](https://github.com/sergiocarracedo/on-a-meet/compare/v1.1.0...v1.2.0) (2026-05-29)
 
 

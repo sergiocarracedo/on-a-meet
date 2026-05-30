@@ -43,8 +43,6 @@ brews:
     description: "CLI tool to detect camera on/off state and trigger commands"
     license: "MIT"
     skip_upload: auto
-    custom_block: |
-      bottle :unneeded
     install: |
       bin.install "on-a-meet"
 

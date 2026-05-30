@@ -45,6 +45,10 @@ brews:
     skip_upload: auto
     install: |
       bin.install "on-a-meet"
+    custom_block: |
+      def install
+        bin.install "on-a-meet"
+      end
 
 changelog:
   sort: asc

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/kardianos/service"
@@ -18,46 +20,115 @@ type noopProgram struct{}
 func (p *noopProgram) Start(s service.Service) error { return nil }
 func (p *noopProgram) Stop(s service.Service) error  { return nil }
 
-func serviceConfig(user string) *service.Config {
-	return &service.Config{
-		Name:        "on-a-meet",
-		DisplayName: "on-a-meet",
-		Description: "Camera state monitoring service",
-		Arguments: []string{
-			"detect",
-			"--config", "/etc/on-a-meet/config.yaml",
-		},
-		WorkingDirectory: "/",
-		UserName:         user,
+// serviceOptions returns the platform-specific knobs handed to
+// kardianos/service.
+//
+// Linux gets nil, which renders exactly the systemd unit this tool has always
+// produced. macOS needs three things set explicitly:
+//
+//   - UserService, so the plist goes to ~/Library/LaunchAgents rather than
+//     /Library/LaunchDaemons. A LaunchDaemon has no GUI session, so the whole
+//     point of this tool — running the user's on/off command, typically a
+//     notification — would silently do nothing there.
+//   - RunAtLoad, which unlike systemd's Install() defaults to false, so
+//     without it the agent would not come back after logout or reboot.
+//   - LogDirectory, because a user service otherwise logs to ~/on-a-meet.out.log.
+func serviceOptions(goos, home string) service.KeyValue {
+	if goos != "darwin" {
+		return nil
+	}
+	return service.KeyValue{
+		"UserService":  true,
+		"RunAtLoad":    true,
+		"KeepAlive":    true,
+		"LogDirectory": filepath.Join(home, "Library", "Logs"),
 	}
 }
 
-func patchUnitEnvironmentFile(envFile string) error {
-	if envFile == "" {
+func serviceConfig(goos, home, user string) *service.Config {
+	cfg := &service.Config{
+		Name:        appName,
+		DisplayName: appName,
+		Description: "Camera state monitoring service",
+		Arguments: []string{
+			"detect",
+			"--config", serviceConfigPath(goos, home),
+		},
+		WorkingDirectory: "/",
+		UserName:         user,
+		Option:           serviceOptions(goos, home),
+	}
+	if goos == "darwin" {
+		// A LaunchAgent already runs as the owning user, and "/" is a poor
+		// working directory for the commands it launches.
+		cfg.UserName = ""
+		cfg.WorkingDirectory = home
+	}
+	return cfg
+}
+
+// rewriteSystemdEnvironmentFile points a rendered systemd unit at envFile.
+// Pure and testable; changed is false when the unit has no such directive.
+func rewriteSystemdEnvironmentFile(unit, envFile string) (string, bool) {
+	oldLine := "EnvironmentFile=-/etc/sysconfig/" + appName
+	if !strings.Contains(unit, oldLine) {
+		return unit, false
+	}
+	return strings.ReplaceAll(unit, oldLine, "EnvironmentFile=-"+envFile), true
+}
+
+// applyEnvironmentFile wires the environment-file config key into the
+// platform's service definition.
+//
+// On macOS this is deliberately a no-op rather than a gap. launchd has no
+// EnvironmentFile equivalent, only EnvironmentVariables baked in at install
+// time — but on-a-meet already implements this key itself: the executor
+// re-reads the file on every command execution and expands it into the
+// command. So the feature works on macOS with no launchd involvement, and
+// edits take effect without reinstalling the service.
+//
+// Baking the values into the plist was considered and rejected: it would
+// freeze them at install time, write secrets in plaintext under
+// ~/Library/LaunchAgents, and diverge from the live-reload behaviour on Linux.
+func applyEnvironmentFile(goos, envFile string) error {
+	if envFile == "" || goos == "darwin" {
 		return nil
 	}
-	unitPath := "/etc/systemd/system/on-a-meet.service"
+	unitPath := "/etc/systemd/system/" + appName + ".service"
 	data, err := os.ReadFile(unitPath)
 	if err != nil {
 		return fmt.Errorf("reading unit file: %w", err)
 	}
-	oldLine := "EnvironmentFile=-/etc/sysconfig/on-a-meet"
-	newLine := "EnvironmentFile=-" + envFile
-	if !strings.Contains(string(data), oldLine) {
+	content, changed := rewriteSystemdEnvironmentFile(string(data), envFile)
+	if !changed {
 		return nil
 	}
-	content := strings.ReplaceAll(string(data), oldLine, newLine)
 	if err := os.WriteFile(unitPath, []byte(content), 0644); err != nil {
 		return fmt.Errorf("writing unit file: %w", err)
 	}
 	return exec.Command("systemctl", "daemon-reload").Run()
 }
 
-func installService() error {
-	originalUser := os.Getenv("SUDO_USER")
-	svc, err := service.New(&noopProgram{}, serviceConfig(originalUser))
+// newServiceHandle builds the service handle used by every service
+// subcommand, so none of them can drift on how goos and home are resolved.
+func newServiceHandle() (service.Service, error) {
+	home, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("service init failed: %w", err)
+		return nil, fmt.Errorf("resolving home directory: %w", err)
+	}
+	svc, err := service.New(&noopProgram{}, serviceConfig(runtime.GOOS, home, os.Getenv("SUDO_USER")))
+	if err != nil {
+		return nil, fmt.Errorf("service init failed: %w", err)
+	}
+	return svc, nil
+}
+
+func installService() error {
+	goos := runtime.GOOS
+
+	svc, err := newServiceHandle()
+	if err != nil {
+		return err
 	}
 
 	// Stop existing service if running
@@ -73,7 +144,7 @@ func installService() error {
 	}
 	output.Success.Println("Service unit created")
 
-	if err := patchUnitEnvironmentFile(viper.GetString("environment-file")); err != nil {
+	if err := applyEnvironmentFile(goos, viper.GetString("environment-file")); err != nil {
 		output.Warning.Printfln("Failed to patch environment file path: %v", err)
 	}
 
@@ -91,8 +162,8 @@ var installCmd = &cobra.Command{
 	Short: "Install on-a-meet as a system service",
 	Long:  `Creates and enables a systemd (Linux) or launchd (macOS) service unit.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if os.Geteuid() != 0 {
-			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet service install")
+		if err := requirePrivileges(runtime.GOOS, os.Geteuid(), "service install"); err != nil {
+			return err
 		}
 
 		return installService()

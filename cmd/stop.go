@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"runtime"
 
-	"github.com/kardianos/service"
 	"github.com/spf13/cobra"
 
 	"github.com/sergiocarracedo/on-a-meet/internal/output"
@@ -15,17 +15,23 @@ var stopCmd = &cobra.Command{
 	Short: "Stop the on-a-meet service",
 	Long:  `Stops the systemd (Linux) or launchd (macOS) service unit.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if os.Geteuid() != 0 {
-			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet service stop")
+		if err := requirePrivileges(runtime.GOOS, os.Geteuid(), "service stop"); err != nil {
+			return err
 		}
 
-		svc, err := service.New(&noopProgram{}, serviceConfig(""))
+		svc, err := newServiceHandle()
 		if err != nil {
-			return fmt.Errorf("service init failed: %w", err)
+			return err
 		}
 
 		output.Info.Println("Stopping service...")
 		if err := svc.Stop(); err != nil {
+			// On macOS `launchctl unload` errors when the agent simply is
+			// not loaded, which is a routine state, not a failure.
+			if runtime.GOOS == "darwin" {
+				output.Warning.Printfln("Service stop failed (may not be running): %v", err)
+				return nil
+			}
 			return fmt.Errorf("service stop failed: %w", err)
 		}
 		output.Success.Println("Service stopped")

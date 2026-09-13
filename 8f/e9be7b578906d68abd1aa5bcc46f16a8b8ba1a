@@ -1,0 +1,21 @@
+.github/workflows/ci.yml
+  s_27ff53690c713a::t_259574bb98e8cc 15-21,26,28
+.github/workflows/release.yml
+  s_27ff53690c713a::t_259574bb98e8cc 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "8fe9be7b578906d68abd1aa5bcc46f16a8b8ba1a",
+  "prompts": {},
+  "sessions": {
+    "s_27ff53690c713a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "37584833-e990-4e77-ba36-49246aefc160",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Sergio Carracedo <sergio.carracedo@feverup.com>"
+    }
+  }
+}

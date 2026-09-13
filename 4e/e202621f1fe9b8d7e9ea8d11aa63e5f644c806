@@ -1,0 +1,43 @@
+internal/detector/darwin_stub_test.go
+  s_27ff53690c713a::t_4b9b5a9e786df2 1-29
+internal/detector/darwin_parse.go
+  s_27ff53690c713a::t_09848fcd029a65 1-117
+internal/engine/engine.go
+  s_27ff53690c713a::t_f4457de0009fb6 96-101
+  s_27ff53690c713a::t_bae2fba28db193 32-36,59-64,95,185,213-224
+  s_27ff53690c713a::t_87b208888b13a9 225-226
+internal/detector/darwin_parse_test.go
+  s_27ff53690c713a::t_5d0620045a74b2 4,128-211
+  s_27ff53690c713a::t_80a666a8c3a8b6 41
+  s_27ff53690c713a::t_b5a047fb71c5aa 1-3,5-40,42-127,212-213
+cmd/list.go
+  s_27ff53690c713a::t_0df30221819d48 4-5,7,34-35
+  s_27ff53690c713a::t_41b364ec97c179 6,45
+  s_27ff53690c713a::t_720a3aed6dc036 53-55,57-62,64-65
+  s_27ff53690c713a::t_79e4487125e483 36-37
+internal/detector/darwin_stub.go
+  s_27ff53690c713a::t_6dc2a15aca20e3 7-8,16,20,22-23
+cmd/detect.go
+  s_27ff53690c713a::t_41b364ec97c179 9,63
+  s_27ff53690c713a::t_f4457de0009fb6 5,153-158
+  s_27ff53690c713a::t_3e328229ae6494 6,10,52-54,76,110,124,206-215
+  s_27ff53690c713a::t_2d06335d943285 216
+internal/detector/darwin.go
+  s_27ff53690c713a::t_c69384231d42ec 6-7,11,15-32,34-42,46-48,52-57,61,73-74,78,83-87,89-93,98-150,152-161,164-173,175-204,206-218,220-223
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "4ee202621f1fe9b8d7e9ea8d11aa63e5f644c806",
+  "prompts": {},
+  "sessions": {
+    "s_27ff53690c713a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "37584833-e990-4e77-ba36-49246aefc160",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Sergio Carracedo <sergio.carracedo@feverup.com>"
+    }
+  }
+}

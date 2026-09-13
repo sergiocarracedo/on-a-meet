@@ -1,0 +1,24 @@
+AGENTS.md
+  s_27ff53690c713a::t_fa3849b21d9c89 99-100,102,115-123
+README.md
+  s_27ff53690c713a::t_395f7be579406d 138-142,151-158,247-253
+  s_27ff53690c713a::t_acf1eb36091608 47-58,110,117-119,172,174,187-191,202-203,212-227,236,241-244,254-258
+config.yaml.example
+  s_27ff53690c713a::t_bfc2ace6afdd2e 5-7,16-18,26-32,42-44,46-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a6de0a3347815fe07695593cdd6f1b3251a8bf3e",
+  "prompts": {},
+  "sessions": {
+    "s_27ff53690c713a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "37584833-e990-4e77-ba36-49246aefc160",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Sergio Carracedo <sergio.carracedo@feverup.com>"
+    }
+  }
+}

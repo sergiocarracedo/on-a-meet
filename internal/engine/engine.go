@@ -29,6 +29,11 @@ type Engine struct {
 	states map[string]*deviceState
 	mu     sync.Mutex
 	logger *log.Logger
+
+	// errLogged tracks devices whose detector error has already been
+	// reported, so a permanently undetectable camera is announced once
+	// instead of on every poll.
+	errLogged map[string]bool
 }
 
 type Option func(*Engine)
@@ -51,11 +56,12 @@ func WithOnChange(cb OnChange) Option {
 
 func New(det detector.Detector, opts ...Option) *Engine {
 	e := &Engine{
-		detector: det,
-		interval: 1 * time.Second,
-		debounce: 3,
-		states:   make(map[string]*deviceState),
-		logger:   log.New(log.Writer(), "", 0),
+		detector:  det,
+		interval:  1 * time.Second,
+		debounce:  3,
+		states:    make(map[string]*deviceState),
+		errLogged: make(map[string]bool),
+		logger:    log.New(log.Writer(), "", 0),
 	}
 	for _, opt := range opts {
 		opt(e)
@@ -86,6 +92,13 @@ func (e *Engine) Run(ctx context.Context) error {
 	for _, d := range filtered {
 		status, err := e.detector.Detect(d.Path)
 		if err != nil {
+			e.logDetectError(d.Path, err)
+			// Register it anyway: it is a known device, just an unreadable
+			// one. Leaving it out would make the next poll cycle announce it
+			// as newly connected.
+			e.mu.Lock()
+			e.states[d.Path] = &deviceState{info: d, debounceTarget: e.debounce}
+			e.mu.Unlock()
 			continue
 		}
 		initDevices = append(initDevices, initDevice{d, status})
@@ -169,6 +182,7 @@ func (e *Engine) pollCycle() {
 	for path := range filtered {
 		status, err := e.detector.Detect(path)
 		if err != nil {
+			e.logDetectError(path, err)
 			continue
 		}
 
@@ -194,5 +208,19 @@ func (e *Engine) pollCycle() {
 				}
 			}
 		}
+	}
+}
+
+// logDetectError reports a detector failure for a device once. Without this a
+// detector error is indistinguishable from "camera off", which is how a broken
+// backend can look like a working one that never sees the camera.
+func (e *Engine) logDetectError(path string, err error) {
+	e.mu.Lock()
+	already := e.errLogged[path]
+	e.errLogged[path] = true
+	e.mu.Unlock()
+
+	if !already {
+		e.logger.Printf("cannot determine state of %s: %v", path, err)
 	}
 }

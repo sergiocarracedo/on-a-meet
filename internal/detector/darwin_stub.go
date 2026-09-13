@@ -4,6 +4,8 @@ package detector
 
 import "errors"
 
+var errDarwinOnly = errors.New("macOS detection is only supported on Darwin")
+
 type MacOSDetector struct{}
 
 func NewMacOSDetector() *MacOSDetector {
@@ -11,9 +13,11 @@ func NewMacOSDetector() *MacOSDetector {
 }
 
 func (d *MacOSDetector) ListDevices() ([]DeviceInfo, error) {
-	return nil, errors.New("macOS detection is only supported on Darwin")
+	return nil, errDarwinOnly
 }
 
 func (d *MacOSDetector) Detect(devicePath string) (DeviceStatus, error) {
-	return DeviceStatus{}, errors.New("macOS detection is only supported on Darwin")
+	return DeviceStatus{}, errDarwinOnly
 }
+
+func (d *MacOSDetector) Close() error { return nil }

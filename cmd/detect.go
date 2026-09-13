@@ -2,8 +2,12 @@ package cmd
 
 import (
 	"context"
+	"errors"
+	"io"
 	"os"
 	"os/signal"
+	"runtime"
+	"strings"
 	"syscall"
 	"time"
 
@@ -45,6 +49,9 @@ to check camera device status.`,
 		if err != nil {
 			return err
 		}
+		if c, ok := det.(io.Closer); ok {
+			defer c.Close()
+		}
 
 		devices, err := det.ListDevices()
 		if err != nil {
@@ -53,9 +60,7 @@ to check camera device status.`,
 		}
 		if len(devices) == 0 {
 			output.Warning.Println("No camera devices detected.")
-			output.Info.Println("Make sure your camera is connected and you have the right permissions.")
-			output.Info.Println("Tip: add your user to the 'video' group: sudo usermod -a -G video $USER")
-			output.Info.Println("Then log out and back in, or run: newgrp video")
+			printNoDevicesHelp(runtime.GOOS)
 			return nil
 		}
 
@@ -68,6 +73,7 @@ to check camera device status.`,
 		for _, d := range devices {
 			status, err := det.Detect(d.Path)
 			if err != nil {
+				output.Warning.Printfln("  %s ⟶ unavailable: %v", d.Path, err)
 				continue
 			}
 			stateStr := "OFF"
@@ -101,7 +107,7 @@ to check camera device status.`,
 					if cfg.OnCmd != "" {
 						go func() {
 							data := executor.TemplateData{
-								CameraID: path[5:],
+								CameraID: cameraID(path, info),
 								Device:   path,
 								State:    "on",
 							}
@@ -115,7 +121,7 @@ to check camera device status.`,
 					if cfg.OffCmd != "" {
 						go func() {
 							data := executor.TemplateData{
-								CameraID: path[5:],
+								CameraID: cameraID(path, info),
 								Device:   path,
 								State:    "off",
 							}
@@ -144,7 +150,12 @@ to check camera device status.`,
 			cancel()
 		}()
 
-		return eng.Run(ctx)
+		// A cancelled context is how Ctrl-C and SIGTERM arrive; that is a
+		// clean shutdown, not a failure worth printing usage for.
+		if err := eng.Run(ctx); err != nil && !errors.Is(err, context.Canceled) {
+			return err
+		}
+		return nil
 	},
 }
 
@@ -191,4 +202,15 @@ func configFromViper(detectChanged bool) detectConfig {
 		DetectMethod:    method,
 		EnvironmentFile: viper.GetString("environment-file"),
 	}
+}
+
+// cameraID renders {{.CameraID}}. It prefers the detector-supplied stable ID
+// and falls back to trimming the Linux device-node prefix. It must never slice
+// the path blindly: on macOS the path is a display name, so a fixed-width trim
+// mangles it and panics outright for names shorter than the prefix.
+func cameraID(path string, info detector.DeviceInfo) string {
+	if info.ID != "" {
+		return info.ID
+	}
+	return strings.TrimPrefix(path, "/dev/")
 }

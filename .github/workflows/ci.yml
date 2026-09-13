@@ -12,11 +12,18 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # macOS is included because the darwin detection backend is built with
+    # //go:build darwin and would otherwise never be compiled or tested in CI.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version-file: go.mod
       - run: go build ./...
+      - run: go vet ./...
       - run: go test ./...

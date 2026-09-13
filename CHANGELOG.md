@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.0](https://github.com/sergiocarracedo/on-a-meet/compare/v1.4.0...v1.5.0) (2026-09-13)
+
+
+### Features
+
+* **onboard:** pick the detection method by OS, add env-file and verbosity steps ([787853a](https://github.com/sergiocarracedo/on-a-meet/commit/787853a7af8690238f1b5ad20c1f8bf87fd5aabe))
+* **service:** install a per-user LaunchAgent on macOS ([4a15f66](https://github.com/sergiocarracedo/on-a-meet/commit/4a15f6662dd9f411a7049c02e3da5d9404b37a47))
+
+
+### Bug Fixes
+
+* **executor:** surface environment-file problems instead of hiding them ([d0d3cd8](https://github.com/sergiocarracedo/on-a-meet/commit/d0d3cd824058f9ae9f7cd9264b2bbda3ba523bb6))
+* **install:** use the published asset name when downloading ([f1231d6](https://github.com/sergiocarracedo/on-a-meet/commit/f1231d6956701125f64f15bbb85ee6fd34361bbf))
+* **macos:** make camera detection work, and make the CLI OS-aware ([9c09516](https://github.com/sergiocarracedo/on-a-meet/commit/9c09516bcef7b50a4edadfa3c31a3702237e7672))
+* **macos:** report camera state correctly ([4ee2026](https://github.com/sergiocarracedo/on-a-meet/commit/4ee202621f1fe9b8d7e9ea8d11aa63e5f644c806))
+
 ## [1.3.0](https://github.com/sergiocarracedo/on-a-meet/compare/v1.2.2...v1.3.0) (2026-05-30)
 
 

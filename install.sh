@@ -14,7 +14,12 @@ main() {
   version="$(fetch_latest_version)"
   echo "==> Latest release: ${version}"
 
-  local asset="on-a-meet_${version}_${os}_${arch}.tar.gz"
+  # The git tag carries a leading "v" (v1.4.0) but goreleaser names assets
+  # from {{ .Version }}, which does not (on-a-meet_1.4.0_darwin_arm64.tar.gz).
+  # The URL path needs the tag; the filename needs the bare version.
+  local bare_version="${version#v}"
+
+  local asset="on-a-meet_${bare_version}_${os}_${arch}.tar.gz"
   local url="https://github.com/${REPO}/releases/download/${version}/${asset}"
 
   local tmpdir

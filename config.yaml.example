@@ -2,7 +2,9 @@
 # Place at ~/.config/on-a-meet/config.yaml
 # CLI flags override these values.
 
-# Target specific camera device path (e.g., /dev/video0)
+# Target a specific camera.
+# Linux: the device node, e.g. /dev/video0
+# macOS: the camera's display name, e.g. "Logitech StreamCam"
 # If empty, monitors all cameras with OR logic.
 camera: ""
 
@@ -11,8 +13,9 @@ interval: "1s"
 
 # Command to execute when camera turns on
 # Supports template variables: {{.CameraID}}, {{.Device}}, {{.State}}
-#   {{.CameraID}} — short device name, e.g. "video0"
-#   {{.Device}}   — full device path, e.g. "/dev/video0"
+#   {{.CameraID}} — short stable id ("video0" on Linux, the CoreMediaIO
+#                   unique-id on macOS)
+#   {{.Device}}   — full device path on Linux, display name on macOS
 #   {{.State}}    — "on" or "off"
 on-command: ""
 
@@ -20,7 +23,13 @@ on-command: ""
 # Supports same template variables as on-command.
 off-command: ""
 
-# Detection method: "v4l2" or "lsof" (future)
+# Detection method. Valid values depend on the OS:
+#   Linux:  "v4l2" (default) — direct kernel ioctl on /dev/video*
+#           "lsof"           — checks which processes hold the device open
+#   macOS:  "darwin" (default) — follows camera power events in the unified log
+# The default is chosen from the host OS, so this key is usually not needed.
+# Note: on macOS only USB/UVC cameras report these events; the built-in
+# MacBook camera is reported as "not observable".
 detect-method: "v4l2"
 
 # Number of consecutive same-state polls before firing (debounce)
@@ -30,8 +39,11 @@ debounce: 3
 # Set to 0 for no timeout (command runs until completion)
 timeout: "30s"
 
-# Path to an environment file loaded by systemd when running the service.
-# Variables in this file are available to --on / --off commands.
+# Path to an environment file whose KEY=VALUE pairs are merged into the
+# environment of --on / --off commands. The file is re-read on every command
+# execution, so edits take effect without restarting anything.
 # Example: /etc/default/on-a-meet  or  /etc/sysconfig/on-a-meet
-# Only used when installed as a system service.
+# On Linux the path is additionally written into the systemd unit's
+# EnvironmentFile= directive when installed as a service. launchd has no
+# equivalent, so on macOS only the in-process expansion above applies.
 environment-file: ""

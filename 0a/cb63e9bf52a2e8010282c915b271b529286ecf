@@ -1,0 +1,31 @@
+cmd/stop.go
+  s_27ff53690c713a::t_c20009c8920044 6,18-19,22,24
+  s_27ff53690c713a::t_3827b64c0357df 29-34
+cmd/install_test.go
+  s_27ff53690c713a::t_b3fd3288857da9 1-122
+cmd/restart.go
+  s_27ff53690c713a::t_c20009c8920044 6,19-20,23,27,29
+cmd/install.go
+  s_27ff53690c713a::t_bcf5f2c69ef7dd 7-8,23-51,55,59-75,77,80-94,97,102-103,115,120,122,128,147,165-166
+  s_27ff53690c713a::t_c20009c8920044 112-114,116-119,121,123-125,127,129,131
+cmd/uninstall.go
+  s_27ff53690c713a::t_c20009c8920044 6,18-19,22,24
+cmd/start.go
+  s_27ff53690c713a::t_c20009c8920044 6,18-19,22,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "0acb63e9bf52a2e8010282c915b271b529286ecf",
+  "prompts": {},
+  "sessions": {
+    "s_27ff53690c713a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "37584833-e990-4e77-ba36-49246aefc160",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Sergio Carracedo <sergio.carracedo@feverup.com>"
+    }
+  }
+}

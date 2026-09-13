@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"errors"
+	"io"
+	"runtime"
+
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -27,6 +31,10 @@ and current on/off status for each camera.`,
 			return err
 		}
 
+		if c, ok := det.(io.Closer); ok {
+			defer c.Close()
+		}
+
 		devices, err := det.ListDevices()
 		if err != nil {
 			output.Error.Println("Failed to enumerate camera devices:", err)
@@ -34,9 +42,7 @@ and current on/off status for each camera.`,
 		}
 		if len(devices) == 0 {
 			output.Warning.Println("No camera devices detected.")
-			output.Info.Println("Make sure your camera is connected and you have the right permissions.")
-			output.Info.Println("Tip: add your user to the 'video' group: sudo usermod -a -G video $USER")
-			output.Info.Println("Then log out and back in, or run: newgrp video")
+			printNoDevicesHelp(runtime.GOOS)
 			return nil
 		}
 
@@ -44,10 +50,19 @@ and current on/off status for each camera.`,
 			{"Path", "Driver", "Card", "Bus", "Status"},
 		}
 		for _, d := range devices {
-			status := "OFF"
+			// A detector error must not render as "OFF" — that is
+			// indistinguishable from a working camera nobody is using.
+			var status string
 			devStatus, err := det.Detect(d.Path)
-			if err == nil && devStatus.On {
+			switch {
+			case errors.Is(err, detector.ErrDeviceNotObservable):
+				status = "not observable"
+			case err != nil:
+				status = "error"
+			case devStatus.On:
 				status = "ON"
+			default:
+				status = "OFF"
 			}
 			rows = append(rows, []string{d.Path, d.Driver, d.Card, d.Bus, status})
 		}

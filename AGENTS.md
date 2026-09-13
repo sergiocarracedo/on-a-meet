@@ -96,8 +96,10 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 ├── main.go               # Entry point
 ├── cmd/
 │   ├── root.go           # Root command, Viper config, flags
+│   ├── platform.go       # OS policy: privileges, sudo re-exec, method picker
+│   ├── paths.go          # OS-aware config/service paths
 │   ├── onboard.go        # Interactive setup wizard (huh)
-│   ├── detect.go         # detect subcommand — V4L2 polling + command execution
+│   ├── detect.go         # detect subcommand — polling + command execution
 │   ├── list.go           # list subcommand — pterm table of cameras
 │   ├── service.go        # service parent command (+ alias svc)
 │   ├── install.go        # service install — kardianos/service Install()+Start()
@@ -110,9 +112,15 @@ CLI tool in Go that detects camera on/off state and triggers user-defined comman
 │   │   ├── config.go     # Config struct & defaults
 │   │   └── config_test.go
 │   ├── detector/
-│   │   ├── interface.go  # Detector interface, DeviceStatus, DeviceInfo
-│   │   ├── v4l2_linux.go # V4L2Detector — syscall-based camera detection
-│   │   └── v4l2_stub.go  # Non-Linux stub
+│   │   ├── interface.go      # Detector interface, DeviceStatus, DeviceInfo
+│   │   ├── methods.go        # Which detection methods exist per OS
+│   │   ├── v4l2_linux.go     # V4L2Detector — syscall-based camera detection
+│   │   ├── v4l2_stub.go      # Non-Linux stub
+│   │   ├── lsof_linux.go     # LsofDetector — /dev/video* open-file check
+│   │   ├── lsof_stub.go      # Non-Linux stub
+│   │   ├── darwin_parse.go   # macOS log parsing (no build tag, so CI tests it)
+│   │   ├── darwin.go         # MacOSDetector — follows `log stream` events
+│   │   └── darwin_stub.go    # Non-Darwin stub
 │   ├── engine/
 │   │   ├── engine.go     # Polling engine with debounce, hotplug, filtering
 │   │   └── engine_test.go

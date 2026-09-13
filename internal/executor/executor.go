@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"sync"
 	"syscall"
@@ -25,6 +26,7 @@ type Executor struct {
 	timeout time.Duration
 	running sync.Map
 	envFile string
+	warned  sync.Map
 }
 
 func (e *Executor) SetEnvFile(path string) {
@@ -43,6 +45,12 @@ func (e *Executor) ExecOff(ctx context.Context, cmdStr string, data TemplateData
 	return e.exec(ctx, cmdStr, data, "off")
 }
 
+// parseEnvFile reads KEY=VALUE pairs from the configured environment file.
+//
+// Problems here are reported as warnings, not debug output: a configured file
+// that cannot be read means every ${VAR} in the user's command silently
+// expands to empty, which typically shows up far away as an authentication
+// failure rather than as a configuration error.
 func (e *Executor) parseEnvFile() map[string]string {
 	vars := make(map[string]string)
 	if e.envFile == "" {
@@ -50,21 +58,55 @@ func (e *Executor) parseEnvFile() map[string]string {
 	}
 	data, err := os.ReadFile(e.envFile)
 	if err != nil {
-		output.Debug.Printfln("env file %s: %v", e.envFile, err)
+		e.warnOnce("envfile:"+e.envFile, func() {
+			output.Warning.Printfln("environment-file %s could not be read: %v", e.envFile, err)
+			output.Warning.Println("  variables from it will expand to empty in your on/off commands")
+		})
 		return vars
 	}
-	for _, line := range strings.Split(string(data), "\n") {
+
+	var malformed []int
+	for i, line := range strings.Split(string(data), "\n") {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 		line = strings.TrimPrefix(line, "export ")
 		parts := strings.SplitN(line, "=", 2)
-		if len(parts) == 2 {
-			vars[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
+		if len(parts) != 2 {
+			// Most often a long value (an API token) wrapped across lines;
+			// the continuation is dropped, silently truncating the value.
+			malformed = append(malformed, i+1)
+			continue
 		}
+		vars[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
+	}
+
+	if len(malformed) > 0 {
+		e.warnOnce("envfile-malformed:"+e.envFile, func() {
+			output.Warning.Printfln("environment-file %s: ignored %d line(s) with no KEY=VALUE (line %s)",
+				e.envFile, len(malformed), joinInts(malformed))
+			output.Warning.Println("  if a value wraps across lines, join it onto one line — the rest is discarded")
+		})
 	}
 	return vars
+}
+
+func joinInts(ns []int) string {
+	parts := make([]string, len(ns))
+	for i, n := range ns {
+		parts[i] = strconv.Itoa(n)
+	}
+	return strings.Join(parts, ", ")
+}
+
+// warnOnce keeps a repeating misconfiguration from flooding the log, since
+// commands run on every camera transition.
+func (e *Executor) warnOnce(key string, emit func()) {
+	if _, seen := e.warned.LoadOrStore(key, true); seen {
+		return
+	}
+	emit()
 }
 
 func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, state string) error {
@@ -97,12 +139,25 @@ func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, s
 	rendered := buf.String()
 
 	fileVars := e.parseEnvFile()
+	var undefined []string
 	rendered = os.Expand(rendered, func(key string) string {
 		if v, ok := fileVars[key]; ok {
 			return v
 		}
-		return os.Getenv(key)
+		if v, ok := os.LookupEnv(key); ok {
+			return v
+		}
+		undefined = append(undefined, key)
+		return ""
 	})
+	if len(undefined) > 0 {
+		// Silently substituting empty here is how a missing token turns into
+		// a puzzling 401 from the remote service.
+		e.warnOnce("undefined:"+state+":"+strings.Join(undefined, ","), func() {
+			output.Warning.Printfln("%s-command: %s is not defined, expanded to empty",
+				state, strings.Join(dedupe(undefined), ", "))
+		})
+	}
 
 	cmd := exec.CommandContext(cmdCtx, "sh", "-c", rendered)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
@@ -149,4 +204,17 @@ func (e *Executor) exec(ctx context.Context, cmdStr string, data TemplateData, s
 	output.Info.Printfln("%s-command exited with code %d", state, exitCode)
 
 	return nil
+}
+
+func dedupe(in []string) []string {
+	seen := make(map[string]bool, len(in))
+	out := make([]string, 0, len(in))
+	for _, s := range in {
+		if seen[s] {
+			continue
+		}
+		seen[s] = true
+		out = append(out, s)
+	}
+	return out
 }

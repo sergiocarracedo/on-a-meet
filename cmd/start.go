@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"runtime"
 
-	"github.com/kardianos/service"
 	"github.com/spf13/cobra"
 
 	"github.com/sergiocarracedo/on-a-meet/internal/output"
@@ -15,13 +15,13 @@ var startCmd = &cobra.Command{
 	Short: "Start the on-a-meet service",
 	Long:  `Starts the systemd (Linux) or launchd (macOS) service unit if it is installed.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if os.Geteuid() != 0 {
-			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet service start")
+		if err := requirePrivileges(runtime.GOOS, os.Geteuid(), "service start"); err != nil {
+			return err
 		}
 
-		svc, err := service.New(&noopProgram{}, serviceConfig(""))
+		svc, err := newServiceHandle()
 		if err != nil {
-			return fmt.Errorf("service init failed: %w", err)
+			return err
 		}
 
 		output.Info.Println("Starting service...")

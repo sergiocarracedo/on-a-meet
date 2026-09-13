@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"runtime"
 
-	"github.com/kardianos/service"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -16,17 +16,17 @@ var restartCmd = &cobra.Command{
 	Short: "Restart the on-a-meet service to reload config",
 	Long:  `Stops and starts the systemd (Linux) or launchd (macOS) service unit to pick up config changes.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if os.Geteuid() != 0 {
-			return fmt.Errorf("root privileges required — please re-run with sudo: sudo on-a-meet service restart")
+		if err := requirePrivileges(runtime.GOOS, os.Geteuid(), "service restart"); err != nil {
+			return err
 		}
 
-		if err := patchUnitEnvironmentFile(viper.GetString("environment-file")); err != nil {
+		if err := applyEnvironmentFile(runtime.GOOS, viper.GetString("environment-file")); err != nil {
 			output.Warning.Printfln("Failed to patch environment file path: %v", err)
 		}
 
-		svc, err := service.New(&noopProgram{}, serviceConfig(""))
+		svc, err := newServiceHandle()
 		if err != nil {
-			return fmt.Errorf("service init failed: %w", err)
+			return err
 		}
 
 		output.Info.Println("Restarting service...")

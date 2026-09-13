@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/sergiocarracedo/on-a-meet/internal/detector"
 	"github.com/sergiocarracedo/on-a-meet/internal/output"
 )
 
@@ -54,21 +56,23 @@ func initConfig() {
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
-		viper.AddConfigPath(home + "/.config/on-a-meet")
-		viper.AddConfigPath("/etc/on-a-meet")
-		viper.AddConfigPath(".")
+		for _, p := range configSearchPaths(runtime.GOOS, home) {
+			viper.AddConfigPath(p)
+		}
 		viper.SetConfigType("yaml")
 		viper.SetConfigName("config")
 	}
 
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("ON_A_MEET")
+	// Config keys are hyphenated (detect-method, environment-file), but a
+	// hyphen cannot appear in an environment variable name. Without this
+	// replacer none of those keys can be overridden from the environment at
+	// all: ON_A_MEET_DETECT_METHOD, ON_A_MEET_ENVIRONMENT_FILE and friends
+	// are simply never matched.
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 
-	defaultMethod := "v4l2"
-	if runtime.GOOS == "darwin" {
-		defaultMethod = "darwin"
-	}
-	viper.SetDefault("detect-method", defaultMethod)
+	viper.SetDefault("detect-method", detector.DefaultMethod(runtime.GOOS))
 	viper.SetDefault("interval", "1s")
 	viper.SetDefault("debounce", 3)
 	viper.SetDefault("timeout", "30s")

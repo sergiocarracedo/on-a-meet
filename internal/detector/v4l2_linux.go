@@ -82,6 +82,7 @@ func openAndQueryCap(path string) (DeviceInfo, bool, error) {
 
 	return DeviceInfo{
 		Path:   path,
+		ID:     filepath.Base(path),
 		Driver: nullTerminatedString(cap.Driver[:]),
 		Card:   nullTerminatedString(cap.Card[:]),
 		Bus:    nullTerminatedString(cap.BusInfo[:]),

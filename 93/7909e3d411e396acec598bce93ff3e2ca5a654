@@ -1,0 +1,19 @@
+internal/executor/executor.go
+  s_27ff53690c713a::t_5e339c40ca491c 9,29,48-53,61-64,67-69,76-80,82-90,95-111,142,147-151,153-160,208-220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "937909e3d411e396acec598bce93ff3e2ca5a654",
+  "prompts": {},
+  "sessions": {
+    "s_27ff53690c713a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "37584833-e990-4e77-ba36-49246aefc160",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Sergio Carracedo <sergio.carracedo@feverup.com>"
+    }
+  }
+}
